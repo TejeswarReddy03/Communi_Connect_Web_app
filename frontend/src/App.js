@@ -1,6 +1,8 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter ,Route,Routes } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Signup from './pages/signup';
 import Home from './pages/home';
 import Chats from './components/chats';
 import Maps from './components/maps';
@@ -12,7 +14,8 @@ function App() {
     <div>
     <BrowserRouter>
       <Routes>
-        <Route  index element={<Home />} />
+        <Route index element={<Signup/>}/>
+        <Route  element={<Home />} />
         <Route path="/chats" element={<Chats />} />
         <Route path="/maps" element={<Maps />} />
         <Route path="/posts" element={<Posts />} />
