@@ -1,3 +1,3 @@
 window.env = {
-  "GMAPSAPI": "YAIzaSyAmBw8p8Jrf5peQPAO9KAixKT2LSojFV_I"
+  "GMAPSAPI": "AIzaSyCEVWmRKHs_Uu6Z3OXd0O-xdz7pdkXTKR8"
 };
