@@ -1,6 +1,6 @@
 import React from 'react';
-
+import Markonmap from './markonmap';
 function Maps(){
-    return <h1>this is Maps page</h1>
+    return <Markonmap />
 }
 export default Maps;
