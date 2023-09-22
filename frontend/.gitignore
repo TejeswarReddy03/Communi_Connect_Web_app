@@ -10,7 +10,7 @@
 
 # Secret
 .env
-
+/public/env.js
 
 # production
 /build
