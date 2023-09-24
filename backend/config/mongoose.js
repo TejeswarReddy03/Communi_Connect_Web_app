@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://tejeswarreddysunkugari03:mongodbatlas200339@cluster0.lkcuxyy.mongodb.net/communiconnectwebapp');
+mongoose.connect('mongodb://127.0.0.1:27017/communi', {
+    useNewUrlParser: true,
+  });
 
 const db = mongoose.connection;
 

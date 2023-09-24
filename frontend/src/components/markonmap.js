@@ -22,7 +22,7 @@ function Gmap(){
   const center=useMemo(()=>({lat:44,lng:-60}),[]);
   return <GoogleMap zoom={10} center={{lat:44, lng: -80}}  mapContainerStyle={{
       width: '100%',
-      height: '800px',
+      height: '400px',
     }}>
       <Marker position={center} />
     </GoogleMap> 

@@ -5,11 +5,35 @@ const port = 8004;
 const app=express();
 app.use(express.json());
 const User = require("./models/user");
+const Announcements=require("./models/announcements");
 app.use(cors());
 app.get("/gett",function(req,res){
     res.send("running!!!");
     //console.log(req);
 });
+
+app.get('/api/announcements', async (req, res) => {
+  try {
+
+    const query = {};
+    const facts = await Announcements.find(query);
+//console.log(facts);
+console.log("logging facts");
+    res.json(facts);
+  } catch (error) {
+    console.error('Error fetching announcements:', error);
+    res.status(500).json({ error: 'An error occurred while fetching facts.' });
+  }
+});
+
+app.post('/api/announcements',async(req,res)=>{
+  const {announcement,pincode}=req.body;
+  const NewAnnouncement=new Announcements({
+  announcement,
+  pincode
+  });
+  await NewAnnouncement.save();
+})
 /*
 const create=function(req,res){
     if(req.body.password!=req.body.confirm_password){
