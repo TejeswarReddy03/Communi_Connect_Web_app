@@ -16,6 +16,7 @@ const bodyParser=require('body-parser');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(cookieParser());
 const User = require("./models/user");
+const Announcements=require("./models/announcements");
 app.use(cors());
 app.use(session({
     name:'codeial',
@@ -44,6 +45,31 @@ app.get("/gett",function(req,res){
     res.send("running!!!");
     //console.log(req);
 });
+
+app.get('/api/announcements', async (req, res) => {
+  try {
+
+    const query = {};
+    const facts = await Announcements.find(query);
+//console.log(facts);
+console.log("logging facts");
+    res.json(facts);
+  } catch (error) {
+    console.error('Error fetching announcements:', error);
+    res.status(500).json({ error: 'An error occurred while fetching facts.' });
+  }
+});
+
+app.post('/api/announcements',async(req,res)=>{
+  const {announcement,pincode}=req.body;
+  const NewAnnouncement=new Announcements({
+  announcement,
+  pincode
+  });
+  await NewAnnouncement.save();
+})
+
+
 
 
 
