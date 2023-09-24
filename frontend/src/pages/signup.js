@@ -27,7 +27,7 @@ function Signup(){
     
         try {
           // Make an HTTP POST request to your backend server
-          const response = await axios.post("http://localhost:8004/gets", formData); // Replace "/api/register" with your backend endpoint
+          const response = await axios.post("http://localhost:8004/create", formData); // Replace "/api/register" with your backend endpoint
           console.log("Registration successful", response.data);
     
           // Optionally, you can redirect the user or perform other actions

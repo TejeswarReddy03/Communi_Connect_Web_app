@@ -1,12 +1,46 @@
 const express = require('express');
+const path = require('path');
 const cors = require("cors");
 const db = require('./config/mongoose');
 const port = 8004;
+const session= require('express-session');
+const passport=require('passport');
+const passportLocal =require('./config/passport-local-strategy');
+const usersController=require('./controllers/users_controller');
+const MongoStore = require('connect-mongo')(session);
+
 const app=express();
 app.use(express.json());
+const cookieParser = require('cookie-parser');
+const bodyParser=require('body-parser');
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(cookieParser());
 const User = require("./models/user");
 const Announcements=require("./models/announcements");
 app.use(cors());
+app.use(session({
+    name:'codeial',
+    secret:'xyz',
+    saveUninitialized:false,
+    resave:false,
+    cookie :{
+        maxAge:(1000*60*100)
+    },
+    store: new MongoStore(
+        {
+            mongooseConnection: db,
+            autoremove: 'disabled'
+        },
+        function(err){
+            console.log(err || 'connect-mongodb setup ok');
+        }
+    )
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(passport.setAuthenticatedUser);
+
+
 app.get("/gett",function(req,res){
     res.send("running!!!");
     //console.log(req);
@@ -34,50 +68,18 @@ app.post('/api/announcements',async(req,res)=>{
   });
   await NewAnnouncement.save();
 })
-/*
-const create=function(req,res){
-    if(req.body.password!=req.body.confirm_password){
-        return res.redirect('back');
-    }
-    User.findOne({email:req.body.email})
-.then((user)=>{
-        if(!user){
-            User.create(
-                req.body
-            )
-          .then((user) => {
-            console.log("created");
-            return res.redirect('/users/signin');
-          })
-          .catch((err) => {
-            console.log("error in signing up",err);
-            return;
-          });
-        }
-        else{
-            return res.redirect('back');
-        }
-    })
-    .catch((err) => {
-            console.log("error in finding user in signing up");
-            return;
-          });
-};
 
 
 
-app.post('/gets', async (req, res) => {
-    try {
-        
-        console.log(req.body); // Log the request body
-        res.status(200).json({ message: 'Data received successfully' }); // Respond to the client
-    } catch (error) {
-        console.error('Error saving data:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-},create);
 
-*/
+
+app.get('/data', (req, res) => {
+    const data = { key: 'valueees' };
+    res.json(data);
+  });
+
+
+
 const create = async (req, res) => {
     console.log("HH");
     try {
@@ -110,8 +112,42 @@ const create = async (req, res) => {
   };
 
 
+createSession = async function (req, res) {
+    try {
+      // Step 1: Find the user
+      const user = await User.findOne({ email: req.body.email });
+        
+      // Handle user not found
+      if (!user) {
+        //return res.redirect('back');
+        console.log("invalid user");
+      }
+  
+      // Step 2: Handle password check
+      if (user.password !== req.body.password) {
+        console.log("invalid user");
+        //return res.redirect('back');
+      }
+  
+      // Step 3: Handle session creation
+      res.cookie('user_id', user.id);
+    //   return res.redirect('/users/profile');
+    console.log("heyy hiii");
+    } catch (err) {
+      console.log('Error in creating session:', err);
+      return res.redirect('back');
+    }
+  };
+  
 
-  app.post('/gets', async (req, res) => {
+
+  app.post('/create-session',passport.authenticate(
+    'local'
+),usersController.createSession);
+
+
+
+  app.post('/create', async (req, res) => {
     try {
       console.log(req.body); // Log the request body
       await create(req, res); // Call the create function to create the user
@@ -121,8 +157,23 @@ const create = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+/*
+  app.post('/create-session', async (req, res) => {
+    try {
+       
+      await createSession(req, res); // Call the create function to create the user
+      console.log("hey");
+    //  res.status(200).json({ message: 'Data received and user created successfully' }); // Respond to the client
+    } catch (error) {
+      console.error('Error saving data:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
 
+*/
 
+app.get("/signout",usersController.destroySession);
+  
 app.listen(port,function (err){
     if(err){
         console.log("error in running the server",error);
