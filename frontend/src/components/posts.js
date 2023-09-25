@@ -4,16 +4,19 @@ import axios from 'axios';
 function Posts(){
     const [posts, setPosts] = useState([]);
     const [shouldFetch, setShouldFetch] = useState(true);
-
+   const [isformUploading,setisformUploading]=useState(false);
     useEffect(() => {
       
         async function getPosts() {
           try {
+            setShouldFetch(true);
             const response = await axios.get('http://localhost:8004/api/posts', {});
-            console.log(response.data);
+           // console.log(response.data);
             setPosts(response.data);
           } catch (error) {
             console.error('Error fetching posts:', error);
+          }finally{
+            setShouldFetch(false);
           }
         
         
@@ -21,16 +24,19 @@ function Posts(){
     }
     getPosts();
         
-      },[]);
-
+      },[isformUploading]);
+      useEffect(()=>{
+        if(shouldFetch==false) setisformUploading(shouldFetch);
+         },[shouldFetch]);
+       
     return(
 <>
-<ShowAnnouncements annData={posts} setShouldFetch={setShouldFetch} />
+<ShowAnnouncements annData={posts} setShouldFetch={setShouldFetch} setisformUploading={setisformUploading}/>
 </>  
 )
 }
 
-function NewAnnouncementForm({setShouldFetch}) {
+function NewAnnouncementForm({setShouldFetch,setisformUploading}) {
     const [user_name, setUsername] = useState('');
     const [contents, setPost] = useState('');
     
@@ -42,8 +48,9 @@ function NewAnnouncementForm({setShouldFetch}) {
            // setAnnouncements((prevPosts) => [response.data, ...prevPosts]);
              await axios.post("http://localhost:8004/api/posts", { username: user_name, content: contents });
             
-            setShouldFetch(true);
+           // setShouldFetch(true);
           }
+          setisformUploading(true);
           posttoapi();
          
       } 
@@ -86,10 +93,10 @@ function NewAnnouncementForm({setShouldFetch}) {
 function ShowAnnouncements(props) {
     const announcementData = props.annData;
 
-    console.log(announcementData);
+   // console.log(announcementData);
     return (
       <div>
-      <NewAnnouncementForm setShouldFetch={props.setShouldFetch} />
+      <NewAnnouncementForm setShouldFetch={props.setShouldFetch} setisformUploading={props.setisformUploading}/>
      
       <ul>
 
