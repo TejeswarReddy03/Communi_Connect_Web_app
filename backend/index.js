@@ -17,6 +17,8 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(cookieParser());
 const User = require("./models/user");
 const Announcements=require("./models/announcements");
+const Post=require("./models/posts");
+
 app.use(cors());
 app.use(session({
     name:'codeial',
@@ -68,6 +70,34 @@ app.post('/api/announcements',async(req,res)=>{
   });
   await NewAnnouncement.save();
 })
+
+
+app.get('/api/posts', async (req, res) => {
+    try {
+  
+      const query = {};
+      const posts = await Post.find(query);
+  //console.log(facts);
+  console.log("logging posts");
+      res.json(posts);
+    } catch (error) {
+      console.error('Error fetching announcements:', error);
+      res.status(500).json({ error: 'An error while fetching posts.' });
+    }
+  });
+  
+  app.post('/api/posts',async(req,res)=>{
+    const {username,content}=req.body;
+    const NewPost=new Post({
+        username,
+        content
+    
+    });
+    await NewPost.save();
+  })
+
+
+
 
 
 
