@@ -42,7 +42,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.setAuthenticatedUser);
 
-app.get("/api/maps",function(req,res)=>{
+app.get("/api/maps",function(req,res){
   res.sendFile(path.join(__dirname, 'index.html'));
 })
 app.get("/gett",function(req,res){
