@@ -9,32 +9,21 @@
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css" type="text/css">
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
     <!-- Include Bootstrap CSS and JS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/…
-[10:17 pm, 28/09/2023] Tejeswar Reddy: <!DOCTYPE html>
-<html>
-<head>
-    <title>Mapbox 3D Globe Example</title>
-    <meta charset='utf-8' />
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
-    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
-    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css" type="text/css">
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
-    <!-- Include Bootstrap CSS and JS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; }
-        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-
+        body { margin: 0; padding: 0; height:100%; }
+        #map { position: absolute;  top: 0;
+               bottom: 0;
+               left: 0;
+               right: 0; width: 100%; height: 100%; }
         #geocoder { position: absolute; top: 10px; left: 10px; z-index: 1; background: rgba(255, 255, 255, 0.8); border-radius: 3px; padding: 5px; }
-        .marker-btn { margin-top: 18px; margin-left: 160px; z-index: 2; }
-        .mapboxgl-canvas-container.mapboxgl-interactive {
-            top: 0;
-            bottom: initial;
-        }
+        .marker-btn { margin-top: 18px; margin-left: 170px; z-index: 2; }
+        .current-location-btn { position: absolute; right: 10px; z-index: 1; top: 18px }
+        .media-upload-btn { position: absolute; right: 10px; z-index: 1; top: 60px }
+        .media-input { display: none; }
     </style>
 </head>
 <body>
@@ -47,6 +36,7 @@
             </div>
         </div>
     </div>
+    <button class='btn btn-primary current-location-btn' id='currentLocationBtn'>Current Location</button>
 
     <script>
         mapboxgl.accessToken = 'pk.eyJ1Ijoic2hhbm11a2gwNTIyIiwiYSI6ImNsbXc0MnljbjBxcncya3F3c3E1dmYyMGYifQ.a_0SkZ7qha0Y8l7JBicNiA';
@@ -55,11 +45,11 @@
         if (!hasInteracted) {
             var map = new mapboxgl.Map({
                 container: 'map',
-                style: 'mapbox://styles/mapbox/satellite-streets-v12',
-                center: [28.6139, 77.2090],
-                zoom: 18,
-                pitch: 45,
-                bearing: -17.6,
+                style: 'mapbox://styles/mapbox/outdoors-v12',
+                center: [78.9, 20.5],
+                zoom: 1,
+                pitch: 0,
+                bearing: 0,
                 hash: true,
                 transformRequest: (url, resourceType) => {
                     if (resourceType === 'Tile' && url.endsWith('mvt')) {
@@ -126,6 +116,24 @@
                                 type: 'FeatureCollection',
                                 features: map.getSource('markers')._data.features.concat(newFeature)
                             });
+
+                            // Ask for media input
+                            var mediaInput = document.createElement('input');
+                            mediaInput.type = 'file';
+                            mediaInput.accept = 'image/*,video/*';
+                            mediaInput.id = 'mediaInput';
+                            mediaInput.style.display = 'none';
+                            document.body.appendChild(mediaInput);
+
+                            mediaInput.addEventListener('change', function () {
+                                var files = this.files;
+                                if (files.length > 0) {
+                                    handleMediaUpload(files, coordinates, description);
+                                }
+                            });
+
+                            mediaInput.click();
+                            document.body.removeChild(mediaInput);
                         }
                         addMarker = false;
                     } else {
@@ -149,10 +157,10 @@
             var map = new mapboxgl.Map({
                 container: 'map',
                 style: 'mapbox://styles/mapbox/outdoors-v12',
-                center: [77.958984, 18.312811],
-                zoom: 0.8,
-                pitch: 45,
-                bearing: -17.6,
+                center: [78.9629,20.5937],
+                zoom: 1,
+                pitch: 0,
+                bearing: 0,
                 hash: true,
                 transformRequest: (url, resourceType) => {
                     if (resourceType === 'Tile' && url.endsWith('mvt')) {
@@ -196,90 +204,108 @@
                         'icon-image': 'circle-15',
                         'icon-allow-overlap': true
                     }
-               
                 });
-map.on('click', function (e) {
-    if (addMarker) {
-        var coordinates = e.lngLat;
-        var description = window.prompt('Enter a description for the marker:');
-        if (description) {
-            var newFeature = {
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: coordinates.toArray()
-                },
-                properties: {
-                    description: description
-                }
-            };
-
-            map.getSource('markers').setData({
-                type: 'FeatureCollection',
-                features: map.getSource('markers')._data.features.concat(newFeature)
-            });
-        }
-        addMarker = false;
-    } else {
-        var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
-        if (features.length) {
-            var description = features[0].properties.description;
-            if (description) {
-                alert(description);
-            } else {
-                alert('No description available for this marker.');
-            }
-        }
-    }
-});
-});
-var marker = new mapboxgl.Marker({
-    color: '#FF5733',
-    scale: 0.6
-});
-
-map.on('click', function (e) {
-    if (addMarker) {
-        var coordinates = e.lngLat;
-        var description = window.prompt('Enter a description for the marker:');
-        if (description) {
-            var newFeature = {
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: coordinates.toArray()
-                },
-                properties: {
-                    description: description
-                }
-            };
-
-            map.getSource('markers').setData({
-                type: 'FeatureCollection',
-                features: map.getSource('markers')._data.features.concat(newFeature)
+            
+                map.on('click', function (e) {
+                    if (addMarker) {
+                        var coordinates = e.lngLat;
+                        var description = window.prompt('Enter a description for the marker:');
+                        if (description) {
+                            var shouldAddMedia = confirm('Do you want to add media?');
+                            if (shouldAddMedia) {
+                                var mediaInput = document.createElement('input');
+                                mediaInput.type = 'file';
+                                mediaInput.accept = 'image/*,video/*';
+                                mediaInput.id = 'mediaInput';
+                                mediaInput.style.display = 'none';
+                                document.body.appendChild(mediaInput);
+    
+                                mediaInput.addEventListener('change', function () {
+                                    var files = this.files;
+                                    if (files.length > 0) {
+                                        handleMediaUpload(files, coordinates, description);
+                                    }
+                                });
+    
+                                mediaInput.click();
+                                document.body.removeChild(mediaInput);
+                            } else {
+                                addMarkerToMap(coordinates, description, null);
+                            }
+                        }
+                        addMarker = false;
+                    } else {
+                        var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
+                        if (features.length) {
+                            var description = features[0].properties.description;
+                            if (description) {
+                                alert(description);
+                            } else {
+                                alert('No description available for this marker.');
+                            }
+                        }
+                    }
+                });
+                // Set hasInteracted flag in local storage
+                localStorage.setItem('hasInteracted', 'true');
             });
 
-            // Set the marker properties
-            marker.setLngLat(coordinates)
-                .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-                    .setHTML('<h3>' + description + '</h3>'))
-                .addTo(map);
-        }
-        addMarker = false;
-    } else {
-        var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
-        if (features.length) {
-            var description = features[0].properties.description;
-            if (description) {
-                alert(description);
-            } else {
-                alert('No description available for this marker.');
-            }
-        }
-    }
-});
+            // Function to handle media upload
+            function handleMediaUpload(files, coordinates, description) {
+                var file = files[0];
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var mediaUrl = e.target.result;
+                    var newFeature = {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: coordinates
+                        },
+                        properties: {
+                            description: description,
+                            media: mediaUrl
+                        }
+                    };
 
-}
-</script>
+                    map.getSource('markers').setData({
+                        type: 'FeatureCollection',
+                        features: map.getSource('markers')._data.features.concat(newFeature)
+                    });
+
+                    // Set the marker properties
+                    var marker = new mapboxgl.Marker({
+                        color: '#FF5733',
+                        scale: 0.6
+                    }).setLngLat(coordinates)
+                      .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+                          .setHTML('<h3>' + description + '</h3><img src="' + mediaUrl + '" width="200">'))
+                      .addTo(map);
+                }
+                reader.readAsDataURL(file);
+            }
+
+            document.getElementById('currentLocationBtn').addEventListener('click', function() {
+                if ('geolocation' in navigator) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var userCoordinates = [position.coords.longitude, position.coords.latitude];
+                        map.flyTo({ center: userCoordinates, zoom: 14 });
+
+                        var userMarker = new mapboxgl.Marker({
+                            color: '#00FF00',
+                            scale: 1.2
+                        }).setLngLat(userCoordinates).addTo(map);
+                    }, function(error) {
+                        console.error('Error getting current location:', error);
+                        alert('Error getting current location. Please make sure location services are enabled.');
+                    });
+                } else {
+                    alert('Geolocation is not supported by your browser.');
+                }
+            });
+
+        }
+    </script>
 </body>
 </html>
+
