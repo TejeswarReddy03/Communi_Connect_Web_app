@@ -16,10 +16,10 @@ function App() {
     <div>
     <BrowserRouter>
       <Routes>
-        <Route  index element={<Home/>}/>
+        <Route  index element={<Login/>}/>
         {/* <Route  element={<Home />} /> */}
         <Route path="/signup" element={<Signup />} />
-        <Route path= "/login" element={<Login />} />
+        <Route path= "/home" element={<Home />} />
         <Route path="/chats" element={<Chats />} />
         <Route path="/maps" element={<Maps />} />
         <Route path="/posts" element={<Posts />} />

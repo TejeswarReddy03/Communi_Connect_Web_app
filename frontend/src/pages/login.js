@@ -2,10 +2,10 @@ import axios from 'axios';
 import React, { useState } from "react";
 import { BrowserRouter ,Route,Routes } from 'react-router-dom';
 import Home from './home';
-
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
-
+  const navigate=useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -27,7 +27,8 @@ function Login() {
     try {
       // Make an HTTP POST request to your backend server
       const response = await axios.post("http://localhost:8004/create-session", formData); // Replace "/api/register" with your backend endpoint
-      console.log("Registration successful", response.data);
+      console.log("Registration successful and this is the data of user", response.data);
+     navigate('/home', { state: { userData: response.data } });
 
       // Optionally, you can redirect the user or perform other actions
     } catch (error) {
