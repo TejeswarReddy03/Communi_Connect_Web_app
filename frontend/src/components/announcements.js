@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import { useLocation } from 'react-router-dom';
 function Announcements(props) {
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isformUploading,setIsformUploading]=useState(false);
- 
+  const location = useLocation();
+  const userstate = location.state;
+  
+  const userdata=userstate.userData;
+
   useEffect(() => {
     async function getAnnouncements() {
       setIsLoading(true);
@@ -28,7 +32,8 @@ function Announcements(props) {
 
   return (
     <div>
-      {isLoading ? <LoadingPage /> : <ShowAnnouncements annData={announcements} setAnnouncements={setAnnouncements} setIsLoading={setIsLoading} setIsformUploading={setIsformUploading} />}
+      <h1>userdata in announcement is {userdata.email}</h1>
+      {/* {isLoading ? <LoadingPage /> : <ShowAnnouncements annData={announcements} setAnnouncements={setAnnouncements} setIsLoading={setIsLoading} setIsformUploading={setIsformUploading} />} */}
     </div>
   );
 }
@@ -102,7 +107,7 @@ function ShowAnnouncements(props) {
     <ul>
       {announcementData.map((x) => (
         <li key={x._id}>
-          {x.announcement} - Created at {new Date(x.createdAt).toLocaleString()}
+          {x.announcement} - Created at {new Date(x.createdAt).toLocaleString() }
         </li>
       ))}
     </ul>
