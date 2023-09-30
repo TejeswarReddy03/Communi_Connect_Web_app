@@ -43,6 +43,28 @@ app.use(passport.session());
 app.use(passport.setAuthenticatedUser);
 
 
+app.get("/auth-success", (req, res) => {
+  const jsonDataEncoded = req.query.data;
+  const jsonData = JSON.parse(decodeURIComponent(jsonDataEncoded));
+ // console.log("Received JSON data:", jsonData);
+ //if(datafrombackend.authstatus==1) {datafrombackend={...jsonData};}
+ 
+  res.json(jsonData);
+  // Now, you can use the jsonData object in your route logic
+ 
+ // res.send("Data received successfully!");
+});
+// app.get("/get-auth-status",(req,res)=>{
+
+
+// })
+app.get("/api/maps",function(req,res){
+  res.sendFile(path.join(__dirname, 'index.html'));
+})
+app.get("/gett",function(req,res){
+    res.send("running!!!");
+    //console.log(req);
+});
 
 app.get('/api/announcements', async (req, res) => {
   try {
@@ -171,19 +193,20 @@ createSession = async function (req, res) {
     try {
       // Step 1: Find the user
       const user = await User.findOne({ email: req.body.email });
-        
-      // Handle user not found
-      if (!user) {
-        //return res.redirect('back');
-        console.log("invalid user");
-      }
+
+//       // Handle user not found
+//       if (!user) {
+//         //return res.redirect('back');
+//         console.log("invalid user");
+//       }
   
-      // Step 2: Handle password check
-      if (user.password !== req.body.password) {
-        console.log("invalid user");
-        //return res.redirect('back');
-      }
+//       // Step 2: Handle password check
+//       if (user.password !== req.body.password) {
+//         console.log("invalid user");
+//         //return res.redirect('back');
+//       }
   
+
       // Step 3: Handle session creation
       res.cookie('user_id', user.id);
     //   return res.redirect('/users/profile');
@@ -194,6 +217,7 @@ createSession = async function (req, res) {
     }
   };
   */
+
 
 
   app.post('/create-session',passport.authenticate(

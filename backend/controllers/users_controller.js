@@ -23,8 +23,18 @@ module.exports.signin=function(req,res){
 
 module.exports.createSession=function(req,res){
 
-  console.log("createSession called");
-    return res.redirect('/');
+//   console.log("createSession called");
+//     return res.redirect('/');
+
+//console.log("the req in createsess",req);
+const emailofuser=req.user.email;
+const pincodeofuser=req.user.pincode;
+const jsonData = { authstatus:1 ,email:emailofuser,pincode:pincodeofuser};
+// // Encode the JSON object as a query parameter
+ const jsonDataEncoded = encodeURIComponent(JSON.stringify(jsonData));
+
+// // Redirect to the target path with the JSON data as a query parameter
+ return res.redirect(`/auth-success?data=${jsonDataEncoded}`);
  }
 
 
