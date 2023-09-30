@@ -15,30 +15,54 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
         body { margin: 0; padding: 0; height:100%; }
-        #map { position: absolute; top: 50%; transform: translateY(-50%); bottom: 0; width: 100%; height: 100%; }
-
+        #map { position: absolute;  top: 0;
+               bottom: 0;
+               left: 0;
+               right: 0; width: 100%; height: 100%; }
         #geocoder { position: absolute; top: 10px; left: 10px; z-index: 1; background: rgba(255, 255, 255, 0.8); border-radius: 3px; padding: 5px; }
-        .marker-btn { margin-top: 18px; margin-left: 170px; z-index: 2; }
-        .current-location-btn { position: absolute; right: 10px; z-index: 1; top: 18px }
-        .mapboxgl-canvas-container.mapboxgl-interactive {
-            top: 0;
-            bottom: initial;
-        }
+        .marker-btn { position: absolute; top: 10px; right: 10px; z-index: 1; margin-right: 930px; margin-top: 5px; }
+        .current-location-btn { position: absolute; right: 10px; z-index: 1; top: 18px; margin-top: 0px; }
+        .media-upload-btn { position: absolute; right: 10px; z-index: 1; top: 60px }
+        .media-input { display: none; }
     </style>
 </head>
 <body>
     <div id='map'></div>
     <div id='geocoder' class='geocoder'></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <button class='marker-btn btn btn-primary' id='addMarkerBtn'>Add Marker</button>
+    <button class='marker-btn btn btn-primary' id='addMarkerBtn'>Add Marker</button>
+    <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="markerModalLabel">Add Marker Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="markerDescription">Description</label>
+                            <input type="text" class="form-control" id="markerDescription" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="markerMedia">Media</label>
+                            <input type="file" class="form-control" id="markerMedia" accept="image/*,video/*" >
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveMarker">Save Marker</button>
+                </div>
             </div>
         </div>
     </div>
+    
     <button class='btn btn-primary current-location-btn' id='currentLocationBtn'>Current Location</button>
 
     <script>
+      //  document.getElementById('markerMedia').value = 'hello.jpg';
         mapboxgl.accessToken = 'pk.eyJ1Ijoic2hhbm11a2gwNTIyIiwiYSI6ImNsbXc0MnljbjBxcncya3F3c3E1dmYyMGYifQ.a_0SkZ7qha0Y8l7JBicNiA';
 
         var hasInteracted = localStorage.getItem('hasInteracted');
@@ -76,7 +100,6 @@
                     alert('Click on the map to add a marker.');
                 }
             });
-            
 
             map.on('style.load', function () {
                 map.addSource('markers', {
@@ -100,24 +123,18 @@
                 map.on('click', function (e) {
                     if (addMarker) {
                         var coordinates = e.lngLat;
-                        var description = window.prompt('Enter a description for the marker:');
-                        if (description) {
-                            var newFeature = {
-                                type: 'Feature',
-                                geometry: {
-                                    type: 'Point',
-                                    coordinates: coordinates.toArray()
-                                },
-                                properties: {
-                                    description: description
-                                }
-                            };
-
-                            map.getSource('markers').setData({
-                                type: 'FeatureCollection',
-                                features: map.getSource('markers')._data.features.concat(newFeature)
-                            });
-                        }
+                        $('#markerModal').modal('show');
+                        $('#saveMarker').on('click', function () {
+                            var description = $('#markerDescription').val();
+                            var mediaInput = $('#markerMedia')[0];
+                            var files = mediaInput.files;
+                            if (description || (files && files.length > 0)) {
+                                handleMediaUpload(files, coordinates, description);
+                                $('#markerModal').modal('hide');
+                            } else {
+                                alert('Please provide a description or upload media.');
+                            }
+                        });
                         addMarker = false;
                     } else {
                         var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
@@ -134,6 +151,64 @@
 
                 // Set hasInteracted flag in local storage
                 localStorage.setItem('hasInteracted', 'true');
+
+                // Function to handle media upload
+                function handleMediaUpload(files, coordinates, description) {
+                    var file = files[0];
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var mediaUrl = e.target.result;
+                        var newFeature = {
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: coordinates
+                            },
+                            properties: {
+                                description: description,
+                                media: mediaUrl
+                            }
+                        };
+
+                        map.getSource('markers').setData({
+                            type: 'FeatureCollection',
+                            features: map.getSource('markers')._data.features.concat(newFeature)
+                        });
+
+                        // Set the marker properties
+                        var marker = new mapboxgl.Marker({
+                            color: '#FF5733',
+                            scale: 0.6
+                        }).setLngLat(coordinates)
+                          .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+                              .setHTML('<h3>' + description + '</h3><img src="' + mediaUrl + '" width="200">'))
+                          .addTo(map);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            document.getElementById('currentLocationBtn').addEventListener('click', function() {
+                if ('geolocation' in navigator) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                     // Success
+                    var userCoordinates = [position.coords.longitude, position.coords.latitude];
+                    map.flyTo({ center: userCoordinates, zoom: 14 });
+
+                     var userMarker = new mapboxgl.Marker({
+                     color: '#00FF00',
+                     scale: 1.2
+                })
+                .setLngLat(userCoordinates).addTo(map);
+}, function(error) {
+    // Error
+    console.error('Error getting current location:', error);
+    alert('Error getting current location. Please make sure location services are enabled.');
+});
+
+                } else {
+                    alert('Geolocation is not supported by your browser.');
+                }
             });
         } else {
             // If user has interacted before, load map without globe projection
@@ -187,109 +262,98 @@
                         'icon-image': 'circle-15',
                         'icon-allow-overlap': true
                     }
-               
                 });
-map.on('click', function (e) {
-    if (addMarker) {
-        var coordinates = e.lngLat;
-        var description = window.prompt('Enter a description for the marker:');
-        if (description) {
-            var newFeature = {
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: coordinates.toArray()
-                },
-                properties: {
-                    description: description
-                }
-            };
 
-            map.getSource('markers').setData({
-                type: 'FeatureCollection',
-                features: map.getSource('markers')._data.features.concat(newFeature)
+                map.on('click', function (e) {
+                    if (addMarker) {
+                        var coordinates = e.lngLat;
+                        $('#markerModal').modal('show');
+                        $('#saveMarker').on('click', function () {
+                            var description = $('#markerDescription').val();
+                            var mediaInput = $('#markerMedia')[0];
+                            var files = mediaInput.files;
+                            if (description || (files && files.length > 0)) {
+                                handleMediaUpload(files, coordinates, description);
+                                $('#markerModal').modal('hide');
+                            } else {
+                                alert('Please provide a description or upload media.');
+                            }
+                        });
+                        addMarker = false;
+                    } else {
+                        var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
+                        if (features.length) {
+                            var description = features[0].properties.description;
+                            if (description) {
+                                alert(description);
+                            } else {
+                                alert('No description available for this marker.');
+                            }
+                        }
+                    }
+                });
+
+                // Set hasInteracted flag in local storage
+                localStorage.setItem('hasInteracted', 'true');
+
+                // Function to handle media upload
+                function handleMediaUpload(files, coordinates, description) {
+                    var file = files[0];
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var mediaUrl = e.target.result;
+                        var newFeature = {
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: coordinates
+                            },
+                            properties: {
+                                description: description,
+                                media: mediaUrl
+                            }
+                        };
+
+                        map.getSource('markers').setData({
+                            type: 'FeatureCollection',
+                            features: map.getSource('markers')._data.features.concat(newFeature)
+                        });
+
+                        // Set the marker properties
+                        var marker = new mapboxgl.Marker({
+                            color: '#FF5733',
+                            scale: 0.6
+                        }).setLngLat(coordinates)
+                          .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+                              .setHTML('<h3>' + description + '</h3><img src="' + mediaUrl + '" width="200">'))
+                          .addTo(map);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            document.getElementById('currentLocationBtn').addEventListener('click', function() {
+                if ('geolocation' in navigator) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+    // Success
+    var userCoordinates = [position.coords.longitude, position.coords.latitude];
+    map.flyTo({ center: userCoordinates, zoom: 14 });
+
+    var userMarker = new mapboxgl.Marker({
+        color: '#00FF00',
+        scale: 1.2
+    }).setLngLat(userCoordinates).addTo(map);
+}, function(error) {
+    // Error
+    console.error('Error getting current location:', error);
+    alert('Error getting current location. Please make sure location services are enabled.');
+});
+
+                } else {
+                    alert('Geolocation is not supported by your browser.');
+                }
             });
         }
-        addMarker = false;
-    } else {
-        var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
-        if (features.length) {
-            var description = features[0].properties.description;
-            if (description) {
-                alert(description);
-            } else {
-                alert('No description available for this marker.');
-            }
-        }
-    }
-});
-});
-var marker = new mapboxgl.Marker({
-    color: '#FF5733',
-    scale: 0.6
-});
-
-map.on('click', function (e) {
-    if (addMarker) {
-        var coordinates = e.lngLat;
-        var description = window.prompt('Enter a description for the marker:');
-        if (description) {
-            var newFeature = {
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: coordinates.toArray()
-                },
-                properties: {
-                    description: description
-                }
-            };
-
-            map.getSource('markers').setData({
-                type: 'FeatureCollection',
-                features: map.getSource('markers')._data.features.concat(newFeature)
-            });
-
-            // Set the marker properties
-            marker.setLngLat(coordinates)
-                .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-                    .setHTML('<h3>' + description + '</h3>'))
-                .addTo(map);
-        }
-        addMarker = false;
-    } else {
-        var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
-        if (features.length) {
-            var description = features[0].properties.description;
-            if (description) {
-                alert(description);
-            } else {
-                alert('No description available for this marker.');
-            }
-        }
-    }
-});
-document.getElementById('currentLocationBtn').addEventListener('click', function() {
-    if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var userCoordinates = [position.coords.longitude, position.coords.latitude];
-            map.flyTo({ center: userCoordinates, zoom: 14 });
-
-            var userMarker = new mapboxgl.Marker({
-                color: '#00FF00',
-                scale: 1.2
-            }).setLngLat(userCoordinates).addTo(map);
-        }, function(error) {
-            console.error('Error getting current location:', error);
-            alert('Error getting current location. Please make sure location services are enabled.');
-        });
-    } else {
-        alert('Geolocation is not supported by your browser.');
-    }
-});
-
-
-}
-</script>
+    </script>
 </body>
 </html>
