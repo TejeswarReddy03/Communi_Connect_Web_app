@@ -146,12 +146,15 @@ app.post('/api/addMarker',async(req,res)=>{
 //router.post('/postimage',passport.checkAuthentication,usersController.update);
 app.get('/api/getMarker', async (req, res) => {
   try {
-    console.log("received get marker request");
+   // console.log("received get marker request");
     const pincode = req.query.pincode;
     let query = {pincode};
-  
+   // console.log("the pincode is",pincode);
+    if (!pincode || typeof pincode !== 'string') {
+      return res.status(400).json({ error: 'Invalid pincode' });
+    }
 
-    const facts = await Markers.find({});
+    const facts = await Markers.find(query);
    // console.log(facts);
     res.json(facts);
   } catch (error) {
