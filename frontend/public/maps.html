@@ -13,6 +13,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <style>
         body { margin: 0; padding: 0; height:100%; }
         #map { position: absolute;  top: 0;
@@ -43,11 +45,19 @@
                     <form>
                         <div class="form-group">
                             <label for="markerDescription">Description</label>
-                            <input type="text" class="form-control" id="markerDescription" value="">
+                            <input type="text" class="form-control" id="markerDescription" value="" required>
                         </div>
                         <div class="form-group">
                             <label for="markerMedia">Media</label>
-                            <input type="file" class="form-control" id="markerMedia" accept="image/*,video/*" >
+                            <input type="file" class="form-control" id="markerMedia" accept="image/*,video/*" required >
+                        </div>
+                        <div class="form-group">
+                            <label for="markerradius">Radius</label>
+                            <input type="number" class="form-control" id="markerradius" value="" min="0" max="15" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="markerpincode">Pincode</label>
+                            <input type="text" class="form-control" id="markerpincode" value="" required>
                         </div>
                     </form>
                 </div>
@@ -62,8 +72,12 @@
     <button class='btn btn-primary current-location-btn' id='currentLocationBtn'>Current Location</button>
 
     <script>
-      //  document.getElementById('markerMedia').value = 'hello.jpg';
         mapboxgl.accessToken = 'pk.eyJ1Ijoic2hhbm11a2gwNTIyIiwiYSI6ImNsbXc0MnljbjBxcncya3F3c3E1dmYyMGYifQ.a_0SkZ7qha0Y8l7JBicNiA';
+        $('#markerModal').on('show.bs.modal', function (event) {
+    // Clear the input fields when the modal is shown
+        $('#markerDescription').val('');
+        $('#markerMedia').val('');
+        });
 
         var hasInteracted = localStorage.getItem('hasInteracted');
         if (!hasInteracted) {
@@ -120,19 +134,28 @@
                     }
                 });
 
+                var markers = [];
+
                 map.on('click', function (e) {
                     if (addMarker) {
                         var coordinates = e.lngLat;
                         $('#markerModal').modal('show');
-                        $('#saveMarker').on('click', function () {
+                        $('#saveMarker').off('click').on('click', function () {
                             var description = $('#markerDescription').val();
                             var mediaInput = $('#markerMedia')[0];
+                            var radiusstring=$('#markerradius').val();
+                         var  radius = parseInt(radiusstring, 10);
+                            var pincode=$('#markerpincode').val();
+                            console.log(typeof(radius),radius);
+                            console.log(typeof(pincode),pincode);
                             var files = mediaInput.files;
-                            if (description || (files && files.length > 0)) {
-                                handleMediaUpload(files, coordinates, description);
+
+                            if (description && (files && files.length > 0)&&radius!==null && pincode.length>0 && radius>=0 && radius<=20) {
+                                handleMediaUpload(files, coordinates, description,radius,pincode);
                                 $('#markerModal').modal('hide');
                             } else {
-                                alert('Please provide a description or upload media.');
+                                alert('All fields are mandatory in the form and radius range has to be below 15');
+                                
                             }
                         });
                         addMarker = false;
@@ -153,11 +176,29 @@
                 localStorage.setItem('hasInteracted', 'true');
 
                 // Function to handle media upload
-                function handleMediaUpload(files, coordinates, description) {
+                function handleMediaUpload(files, coordinates, description,radius,pincode) {
                     var file = files[0];
                     var reader = new FileReader();
                     reader.onload = function(e) {
                         var mediaUrl = e.target.result;
+                        var markerData = {
+                            description: description,
+                            latitude: coordinates.lat,
+                            longitude: coordinates.lng,
+                            pincode:pincode,
+                            // mediaUrl: mediaUrl,
+                            radius: radius,
+                        };
+                        async function postmarkertopapi() {
+                            try {
+                                await axios.post('http://localhost:8004/api/addMarker', markerData);
+                            }
+                            catch (err) {
+                                console.log("error adding marker to db", err);
+                            }
+
+                        }
+                        postmarkertopapi();
                         var newFeature = {
                             type: 'Feature',
                             geometry: {
@@ -170,9 +211,11 @@
                             }
                         };
 
+                        markers.push(newFeature);
+
                         map.getSource('markers').setData({
                             type: 'FeatureCollection',
-                            features: map.getSource('markers')._data.features.concat(newFeature)
+                            features: markers
                         });
 
                         // Set the marker properties
@@ -200,11 +243,11 @@
                      scale: 1.2
                 })
                 .setLngLat(userCoordinates).addTo(map);
-}, function(error) {
-    // Error
-    console.error('Error getting current location:', error);
-    alert('Error getting current location. Please make sure location services are enabled.');
-});
+                }, function(error) {
+                    // Error
+                    console.error('Error getting current location:', error);
+                    alert('Error getting current location. Please make sure location services are enabled.');
+                });
 
                 } else {
                     alert('Geolocation is not supported by your browser.');
@@ -264,16 +307,21 @@
                     }
                 });
 
+                var markers = [];
+
                 map.on('click', function (e) {
                     if (addMarker) {
                         var coordinates = e.lngLat;
                         $('#markerModal').modal('show');
-                        $('#saveMarker').on('click', function () {
+                        $('#saveMarker').off('click').on('click', function () {
                             var description = $('#markerDescription').val();
                             var mediaInput = $('#markerMedia')[0];
+                            var radiusstring=$('#markerradius').val();
+                         var  radius = parseInt(radiusstring, 10);
+                            var pincode=$('#markerpincode').val();
                             var files = mediaInput.files;
-                            if (description || (files && files.length > 0)) {
-                                handleMediaUpload(files, coordinates, description);
+                            if (description && (files && files.length > 0)&&radius!==null && pincode.length>0&&radius>=0 && radius<=20){
+                                handleMediaUpload(files, coordinates, description,radius,pincode);
                                 $('#markerModal').modal('hide');
                             } else {
                                 alert('Please provide a description or upload media.');
@@ -297,11 +345,29 @@
                 localStorage.setItem('hasInteracted', 'true');
 
                 // Function to handle media upload
-                function handleMediaUpload(files, coordinates, description) {
+                function handleMediaUpload(files, coordinates, description,radius,pincode) {
                     var file = files[0];
                     var reader = new FileReader();
                     reader.onload = function(e) {
                         var mediaUrl = e.target.result;
+                        var markerData = {
+                            description: description,
+                            latitude: coordinates.lat,
+                            longitude: coordinates.lng,
+                            pincode:pincode,
+                            // mediaUrl: mediaUrl,
+                            radius: radius,
+                        };
+                        async function postmarkertopapi() {
+                            try {
+                                await axios.post('http://localhost:8004/api/addMarker', markerData);
+                            }
+                            catch (err) {
+                                console.log("error adding marker to db", err);
+                            }
+
+                        }
+                        postmarkertopapi();
                         var newFeature = {
                             type: 'Feature',
                             geometry: {
@@ -314,9 +380,11 @@
                             }
                         };
 
+                        markers.push(newFeature);
+
                         map.getSource('markers').setData({
                             type: 'FeatureCollection',
-                            features: map.getSource('markers')._data.features.concat(newFeature)
+                            features: markers
                         });
 
                         // Set the marker properties
