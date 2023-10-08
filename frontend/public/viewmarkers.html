@@ -122,9 +122,9 @@
                         async function markingonmap(){
                           
                             const response = await axios.get('http://localhost:8004/api/getMarker', {
-        //   params: {
-        //    pincode:userPincode,
-        //   },
+          params: {
+           pincode:userPincode,
+           },
         });
    // console.log("after sending get req");
     // catch(err){
@@ -275,7 +275,12 @@
         scale: 1.2
     }).setLngLat(userCoordinates).addTo(map);
     async function markingonmap(){
-                            const response = await axios.get('http://localhost:8004/api/getMarker');
+                            //const response = await axios.get('http://localhost:8004/api/getMarker');
+                            const response = await axios.get('http://localhost:8004/api/getMarker', {
+          params: {
+           pincode:userPincode,
+           },
+        });
         var markerdata=response.data;
         console.log(markerdata);
         function calculateDistance(point1, point2) {
