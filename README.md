@@ -28,18 +28,18 @@ To set up the Communi Connect Web App, follow these steps:
    cd backend
 2.Install the required backend dependencies using npm:
 
-      ```bash
-       npm install
+    ```bash
+    npm install
 If you encounter any errors during the installation process, you may need to install the dependencies explicitly. Run the following commands to install the dependencies separately:
-          example:npm install express
-                   npm install mongoose
+example:npm install express
+      npm install mongoose
 ### Frontend Installation
 1.Navigate to the 'frontend' folder:
- ```bash
+    ```bash
    cd frontend
 1.Install the required frontend dependencies using npm:
       ```bash
-       npm install
+     npm install
  If you encounter any errors during the installation process, you may need to install the dependencies explicitly. Run the following commands to install the dependencies separately.
 
 ### Usage
