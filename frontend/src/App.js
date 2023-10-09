@@ -12,7 +12,7 @@ import Announcements from './components/announcements';
 import Frontpage from './pages/frontpage';
 function App() {
   return (
-    <div>
+    <div  >
     <BrowserRouter>
       <Routes>
         {/* <Route  index element={<Home/>}/> */}
