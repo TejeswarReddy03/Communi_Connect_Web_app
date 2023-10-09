@@ -1,0 +1,15 @@
+
+body {
+    background: #7b08e7; 
+    background: -webkit-linear-gradient(to right,#9400D3, #FFFFFF);
+    background: linear-gradient(to right, #120B2A, #EFECF1);
+    margin: 0; 
+    padding: 0; 
+    overflow-x: hidden; 
+  }
+  
+  
+  body {
+    color: #ffffff; 
+  }
+  
