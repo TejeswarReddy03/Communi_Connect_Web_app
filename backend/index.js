@@ -8,7 +8,14 @@ const passport=require('passport');
 const passportLocal =require('./config/passport-local-strategy');
 const usersController=require('./controllers/users_controller');
 const MongoStore = require('connect-mongo')(session);
+const cloudinary=require('cloudinary').v2;
 
+cloudinary.config({ 
+  cloud_name: 'dxs9co3sw', 
+  api_key: '916565758543593', 
+  api_secret: 'I5iivkukEGt54Qx4wpop-tAzggg' 
+});
+const nodemailer = require('nodemailer');
 const app=express();
 app.use(express.json());
 const cookieParser = require('cookie-parser');
@@ -18,7 +25,10 @@ app.use(cookieParser());
 const User = require("./models/user");
 const Announcements=require("./models/announcements");
 const Post=require("./models/posts");
+const Markers=require("./models/maps");
+const dotenv = require('dotenv'); // Load dotenv package
 
+dotenv.config();
 app.use(cors());
 app.use(session({
     name:'codeial',
@@ -41,8 +51,25 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.setAuthenticatedUser);
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user:  process.env.SMTP_EMAIL,
+    pass:  process.env.SMTP_PASSWORD,
+  },
+});
 
-
+app.get('/announcements/after/:date', async (req, res) => {
+  const { date } = req.params;
+console.log(date);
+console.log("made api req to after date");
+  try {
+      const announcements = await Announcements.find({ createdAt: { $gte: new Date(date) } });
+      res.json(announcements);
+  } catch (error) {
+      res.status(500).json({ error: 'An error occurred while fetching announcements' });
+  }
+});
 app.get("/auth-success", (req, res) => {
   const jsonDataEncoded = req.query.data;
   const jsonData = JSON.parse(decodeURIComponent(jsonDataEncoded));
@@ -72,7 +99,7 @@ app.get('/api/announcements', async (req, res) => {
     const query = {};
     const facts = await Announcements.find(query);
 //console.log(facts);
-console.log("logging facts");
+// console.log("logging facts");
     res.json(facts);
   } catch (error) {
     console.error('Error fetching announcements:', error);
@@ -87,9 +114,62 @@ app.post('/api/announcements',async(req,res)=>{
   pincode
   });
   await NewAnnouncement.save();
+  const mailOptions = {
+    from: 'webdevteam32023@gmail.com',
+    subject: 'Announcement',
+    text: announcement,
+  };
+  const query = {};
+  //console.log("about to savecweweqw")
+  const users = await User.find(query);
+ // console.log(users);
+ //  console.log("about to send");
+  users.forEach((user) => {
+    mailOptions.to = user.email;
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(`Error sending email to ${user.email}: ${error.message}`);
+      } else {
+        console.log(`Email sent to ${user.email}: ${info.response}`);
+      }
+    });
+  });
+})
+
+app.post('/api/addMarker',async(req,res)=>{
+  const {description,latitude,longitude,radius,pincode,avatar}=req.body;
+  const newMarker=new Markers({
+    description,
+    latitude,
+    longitude,
+    radius,
+    pincode,
+    avatar
+  })
+  //console.log("description ",descritpion);
+  //console.log("in posting marker",req.body);
+
+  await newMarker.save();
 })
 //router.post('/postimage',passport.checkAuthentication,usersController.update);
+app.get('/api/getMarker', async (req, res) => {
+  try {
+   // console.log("received get marker request");
+    const pincode = req.query.pincode;
+    let query = {pincode};
+   // console.log("the pincode is",pincode);
+    if (!pincode || typeof pincode !== 'string') {
+      return res.status(400).json({ error: 'Invalid pincode' });
+    }
 
+    const facts = await Markers.find(query);
+   // console.log(facts);
+    res.json(facts);
+  } catch (error) {
+    console.error('Error fetching facts:', error);
+  
+  }
+});
 
 app.get('/api/posts', async (req, res) => {
     try {
@@ -104,26 +184,26 @@ app.get('/api/posts', async (req, res) => {
       res.status(500).json({ error: 'An error while fetching posts.' });
     }
   });
-  const multer=require('multer');
-  let storage = multer.diskStorage({
-    destination: function (req,file,cb) {
-        cb(null,'../frontend/src/images');
-    },
-    filename: function (req,file,cb) {
-        //file.fieldname is avatar
-        cb(null,file.fieldname + '-' +Date.now());
-    }
-});
-  const upload = multer({storage:storage});
 
-  app.post('/api/posts',upload.single("avatar"),async(req,res)=>{
-    const {formData}=req.body;
-    console.log("heyyyyy",req.file.filename);
+//   const multer=require('multer');
+//   let storage = multer.diskStorage({
+//     destination: function (req,file,cb) {
+//         cb(null,'../frontend/src/images');
+//     },
+//     filename: function (req,file,cb) {
+//         //file.fieldname is avatar
+//         cb(null,file.fieldname + '-' +Date.now());
+//     }
+// });
+  //const upload = multer({storage:storage});
 
+  app.post('/api/posts',async(req,res)=>{
+
+    console.log(req.body);
     const NewPost=new Post({
         "username":req.body.username,
         "content":req.body.content,
-        "avatar":req.file.filename,
+        "avatar":req.body.avatar,
       
     
     });
@@ -133,13 +213,18 @@ app.get('/api/posts', async (req, res) => {
     .catch((error) => {
       console.error('Error saving document:', error);
     });
-  
-  
-  
-  
-  
   ;
   })
+/*
+app.post('/api/posts',async(req,res,next)=>{
+  console.log("d",req.files,"d");
+  const file=req.files;
+  cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{
+    console.log(result);
+  })
+})
+
+*/
 
   // app.post("/upload-image",upload.single("image"),async(req,res)=>{
   //   res.send("uploaded");
@@ -224,6 +309,7 @@ createSession = async function (req, res) {
     'local'
 ),usersController.createSession);
 
+app.get('/destroy-session',usersController.destroySession);
 
 
   app.post('/create', async (req, res) => {
@@ -236,6 +322,7 @@ createSession = async function (req, res) {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+  
 /*
   app.post('/create-session', async (req, res) => {
     try {
@@ -253,6 +340,11 @@ createSession = async function (req, res) {
 
 app.get("/signout",usersController.destroySession);
   
+const fileupload= require('express-fileupload');
+app.use(fileupload({
+  useTempFiles:true
+}));
+
 app.listen(port,function (err){
     if(err){
         console.log("error in running the server",error);
