@@ -69,10 +69,10 @@ function Frontpage() {
       [name]: value,
     });
   };
-
+ 
   return (
     <div>
-      <Components.Container>
+      <Components.Container >
         {isSignIn ? (
           <Components.SignInContainer signlnln={isSignIn.toString()}>
             <Components.Form onSubmit={handleSubmitLogin}>
@@ -163,7 +163,8 @@ function Frontpage() {
           </Components.Overlay>
         </Components.OverlayContainer>
       </Components.Container>
-    </div>
+      </div>
+    
   );
 }
 
