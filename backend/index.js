@@ -73,7 +73,7 @@ console.log("made api req to after date");
 app.get("/auth-success", (req, res) => {
   const jsonDataEncoded = req.query.data;
   const jsonData = JSON.parse(decodeURIComponent(jsonDataEncoded));
- // console.log("Received JSON data:", jsonData);
+  console.log("Received JSON data:", jsonData);
  //if(datafrombackend.authstatus==1) {datafrombackend={...jsonData};}
  
   res.json(jsonData);
