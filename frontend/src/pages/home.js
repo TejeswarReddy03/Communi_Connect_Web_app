@@ -49,6 +49,7 @@ function Home() {
         <button onClick={()=>handleclick("posts")}>posts</button>
         <button onClick={()=>handleclick("announcements")}>announcements</button>
         <button onClick={handlelogout}>logout</button>
+        <button onClick={()=>handleclick("viewmarkers")}>viewmarkers</button>
       </div>
     )
   );
