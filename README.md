@@ -82,6 +82,7 @@ You can change the port as per  your system.
 
 2. **User Login:**
    - Enter your credentials (username and password) to log in.
+   - for testing : USE  email:hello@gmail.com password:1234567 with pincode 11111
 
 #### Home Page Navigation
 
