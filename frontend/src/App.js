@@ -10,6 +10,7 @@ import Posts from './components/posts';
 import Viewmarkers from './components/viewmarkers'
 import Announcements from './components/announcements';
 import Frontpage from './pages/frontpage';
+import Homepage from './Home';
 function App() {
   return (
     <div  >

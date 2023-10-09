@@ -159,10 +159,18 @@ console.log('users :>>', users);
     return (
         <div className='w-screen flex'>
             <div className='w-[25%] h-screen border border-black'>
-                <div className='flex justify-center items-center my-8 mx-14'>
-                    <div className='ml-8'>
-                        <h3 className='text-2xl'>{userData?.name}</h3>
-                        <p className='text-lg font-light'>My Account</p>
+                <div className='flex justify-center items-center h-[15%]'>
+                    <div className='flex items-center'>
+                        <div>
+                            <svg class="h-12 w-12 text-black"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+
+                        </div>
+                        <div className='ml-8'>
+                            <h3 className='text-2xl'>{userData?.name}</h3>
+                            <p className='text-lg font-light'>My Account</p>
+                        </div>
                     </div>
                 </div>
                 <div className='mx-14 mt-10'>
@@ -229,6 +237,7 @@ console.log('users :>>', users);
                         ) : (
                             <div className='text-center text-lg font-semibold mt-24'>
                                 No Messages or No Conversation Selected
+                                <p>Please select any of the users on right or left to chat</p>
                             </div>
                         )}
                     </div>

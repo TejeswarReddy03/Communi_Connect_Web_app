@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv'); // Load dotenv package
+
 /*
 mongoose.connect('mongodb://127.0.0.1:27017/communi', {
     useNewUrlParser: true,
   });
 */
-mongoose.connect('mongodb+srv://tejeswarreddysunkugari03:O9qdfLshEwIYVkhG@cluster0.lkcuxyy.mongodb.net/communiconnectwebapp');
+dotenv.config();
+mongoose.connect(process.env.MONGODB);
 
 
 const db = mongoose.connection;
