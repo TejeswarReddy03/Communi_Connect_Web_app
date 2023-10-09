@@ -29,7 +29,9 @@ module.exports.createSession=function(req,res){
 //console.log("the req in createsess",req);
 const emailofuser=req.user.email;
 const pincodeofuser=req.user.pincode;
-const jsonData = { authstatus:1 ,email:emailofuser,pincode:pincodeofuser};
+const nameofuser = req.user.name;
+const idofuser = req.user.id;
+const jsonData = { authstatus:1 ,email:emailofuser,pincode:pincodeofuser,name:nameofuser,id:idofuser};
 // // Encode the JSON object as a query parameter
  const jsonDataEncoded = encodeURIComponent(JSON.stringify(jsonData));
 

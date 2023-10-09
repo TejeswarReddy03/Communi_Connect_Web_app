@@ -131,7 +131,7 @@
     //     console.log()
     // }
         var markerdata=response.data;
-        console.log(markerdata);
+       // console.log(markerdata);
         function calculateDistance(point1, point2) {
                 var lat1 = point1[1];
                 var lon1 = point1[0];
@@ -187,7 +187,7 @@
                             scale: 0.6
                         }).setLngLat([marker.latitude,marker.longitude])
                           .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-                              .setHTML('<h3>' + marker.description +'</h3>'))
+                              .setHTML('<h3>' + marker.description +'</h3><img src="' + marker.avatar + '" width="200">'))
                           .addTo(map);
                     }
                 });
@@ -339,7 +339,7 @@
                             scale: 0.6
                         }).setLngLat(markercoord)
                           .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-                              .setHTML('<h3>' + marker.description +'</h3>'))
+                              .setHTML('<h3>' + marker.description +'</h3><img src="' + marker.avatar + '" width="200">'))
                           .addTo(map);
                     }
                 });

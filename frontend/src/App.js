@@ -9,17 +9,14 @@ import Maps from './components/maps';
 import Posts from './components/posts';
 import Viewmarkers from './components/viewmarkers'
 import Announcements from './components/announcements';
-// import 'tailwindcss/tailwind.css';
-import Homepage from './Home';
-// import './index.css';
+import Frontpage from './pages/frontpage';
 function App() {
   return (
-    <>
-<div>
+    <div  >
     <BrowserRouter>
       <Routes>
         {/* <Route  index element={<Home/>}/> */}
-        <Route index  element={<Login />} />
+        <Route index  element={< Frontpage/>} />
         <Route path="/signup" element={<Signup />} />
         {/* <Route path="/login" element={<Login />} /> */}
         <Route path= "/home" element={<Homepage />} />
@@ -32,7 +29,7 @@ function App() {
       </Routes>
     </BrowserRouter>
     </div>
-    </>
+    
     
   );
  

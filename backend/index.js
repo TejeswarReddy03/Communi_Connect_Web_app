@@ -16,6 +16,11 @@ cloudinary.config({
   api_secret: 'I5iivkukEGt54Qx4wpop-tAzggg' 
 });
 const nodemailer = require('nodemailer');
+const io = require('socket.io')(8080, {
+  cors: {
+      origin: 'http://localhost:3000',
+  }
+});
 const app=express();
 app.use(express.json());
 const cookieParser = require('cookie-parser');
@@ -26,6 +31,8 @@ const User = require("./models/user");
 const Announcements=require("./models/announcements");
 const Post=require("./models/posts");
 const Markers=require("./models/maps");
+const Conversations = require('./models/conversation');
+const Messages = require('./models/messages');
 const dotenv = require('dotenv'); // Load dotenv package
 
 dotenv.config();
@@ -70,10 +77,53 @@ console.log("made api req to after date");
       res.status(500).json({ error: 'An error occurred while fetching announcements' });
   }
 });
+// Socket.io
+let users = [];
+io.on('connection', socket => {
+    console.log('User connected', socket.id);
+    socket.on('addUser', userId => {
+        const isUserExist = users.find(user => user.userId === userId);
+        if (!isUserExist) {
+            const user = { userId, socketId: socket.id };
+            users.push(user);
+            io.emit('getUsers', users);
+        }
+    });
+
+    socket.on('sendMessage', async ({ senderId, receiverId, message, conversationId }) => {
+        const receiver = users.find(user => user.userId === receiverId);
+        const sender = users.find(user => user.userId === senderId);
+        const user = await User.findById(senderId);
+        console.log('sender :>> ', sender, receiver);
+        if (receiver) {
+            io.to(receiver.socketId).to(sender.socketId).emit('getMessage', {
+                senderId,
+                message,
+                conversationId,
+                receiverId,
+                user: { id: user._id, name: user.name, email: user.email }
+            });
+            }else {
+                io.to(sender.socketId).emit('getMessage', {
+                    senderId,
+                    message,
+                    conversationId,
+                    receiverId,
+                    user: { id: user._id, name: user.name, email: user.email }
+                });
+            }
+        });
+
+    socket.on('disconnect', () => {
+        users = users.filter(user => user.socketId !== socket.id);
+        io.emit('getUsers', users);
+    });
+    // io.emit('getUsers', socket.userId);
+});
 app.get("/auth-success", (req, res) => {
   const jsonDataEncoded = req.query.data;
   const jsonData = JSON.parse(decodeURIComponent(jsonDataEncoded));
- // console.log("Received JSON data:", jsonData);
+  console.log("Received JSON data:", jsonData);
  //if(datafrombackend.authstatus==1) {datafrombackend={...jsonData};}
  
   res.json(jsonData);
@@ -137,13 +187,14 @@ app.post('/api/announcements',async(req,res)=>{
 })
 
 app.post('/api/addMarker',async(req,res)=>{
-  const {description,latitude,longitude,radius,pincode}=req.body;
+  const {description,latitude,longitude,radius,pincode,avatar}=req.body;
   const newMarker=new Markers({
     description,
     latitude,
     longitude,
     radius,
-    pincode
+    pincode,
+    avatar
   })
   //console.log("description ",descritpion);
   //console.log("in posting marker",req.body);
@@ -336,6 +387,94 @@ app.get('/destroy-session',usersController.destroySession);
   });
 
 */
+app.post('/api/conversation', async (req, res) => {
+  try {
+      const { senderId, receiverId } = req.body;
+      const newCoversation = new Conversations({ members: [senderId, receiverId] });
+      await newCoversation.save();
+      res.status(200).send('Conversation created successfully');
+  } catch (error) {
+      console.log(error, 'Error')
+  }
+})
+
+app.get('/api/conversations/:userId', async (req, res) => {
+  try {
+      const userId = req.params.userId;
+      const conversations = await Conversations.find({ members: { $in: [userId] } });
+      const conversationUserData = Promise.all(conversations.map(async (conversation) => {
+          const receiverId = conversation.members.find((member) => member !== userId);
+          const user = await User.findById(receiverId);
+          return { user: { receiverId: user._id, email: user.email, name: user.name }, conversationId: conversation._id }
+      }))
+      res.status(200).json(await conversationUserData);
+  } catch (error) {
+      console.log(error, 'Error')
+  }
+})
+
+app.post('/api/message', async (req, res) => {
+  try {
+      const { conversationId, senderId, message, receiverId = '' } = req.body;
+      if (!senderId || !message) return res.status(400).send('Please fill all required fields')
+      if (conversationId === 'new' && receiverId) {
+          const newCoversation = new Conversations({ members: [senderId, receiverId] });
+          await newCoversation.save();
+          const newMessage = new Messages({ conversationId: newCoversation._id, senderId, message });
+          await newMessage.save();
+          return res.status(200).send('Message sent successfully');
+      } else if (!conversationId && !receiverId) {
+          return res.status(400).send('Please fill all required fields')
+      }
+      const newMessage = new Messages({ conversationId, senderId, message });
+      await newMessage.save();
+      res.status(200).send('Message sent successfully');
+  } catch (error) {
+      console.log(error, 'Error')
+  }
+})
+
+app.get('/api/message/:conversationId', async (req, res) => {
+  try {
+      const checkMessages = async (conversationId) => {
+          console.log(conversationId, 'conversationId')
+          const messages = await Messages.find({ conversationId });
+          const messageUserData = Promise.all(messages.map(async (message) => {
+              const user = await User.findById(message.senderId);
+              return { user: { id: user._id, email: user.email, name: user.name }, message: message.message }
+          }));
+          res.status(200).json(await messageUserData);
+      }
+      const conversationId = req.params.conversationId;
+      if (conversationId === 'new') {
+          const checkConversation = await Conversations.find({ members: { $all: [req.query.senderId, req.query.receiverId] } });
+          if (checkConversation.length > 0) {
+              checkMessages(checkConversation[0]._id);
+          } else {
+              return res.status(200).json([])
+          }
+      } else {
+          checkMessages(conversationId);
+      }
+  } catch (error) {
+      console.log('Error', error)
+  }
+})
+
+app.get('/api/users/:pincode', async (req, res) => {
+  try {
+      const userId = req.headers.userId;
+      const pincode = req.params.pincode;
+      // const users = await User.find({ _id: { $ne: userId } });
+      const users = await User.find({ pincode: pincode });
+      const usersData = await Promise.all(users.map(async (user) => {
+          return { user: { email: user.email, name: user.name, receiverId: user._id , pincode: user.pincode} }
+      }))
+      res.status(200).json(await usersData);
+  } catch (error) {
+      console.log('Error', error)
+  }
+})
 
 app.get("/signout",usersController.destroySession);
   
