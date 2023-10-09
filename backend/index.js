@@ -137,13 +137,14 @@ app.post('/api/announcements',async(req,res)=>{
 })
 
 app.post('/api/addMarker',async(req,res)=>{
-  const {description,latitude,longitude,radius,pincode}=req.body;
+  const {description,latitude,longitude,radius,pincode,avatar}=req.body;
   const newMarker=new Markers({
     description,
     latitude,
     longitude,
     radius,
-    pincode
+    pincode,
+    avatar
   })
   //console.log("description ",descritpion);
   //console.log("in posting marker",req.body);
