@@ -39,10 +39,13 @@ const jsonData = { authstatus:1 ,email:emailofuser,pincode:pincodeofuser};
 
 
 module.exports.destroySession=function(req,res){
+    
     req.logout(function(err) {
-        if (err) { return next(err); }
-        req.flash('success','Logged out Successfully');
-
-        res.redirect('/');
+        if (err) { console.log("err"); return next(err); 
+       }
+        console.log("logout called");
+        //req.flash('success','Logged out Successfully');
+       
+     res.send('hi');
     });
  }
