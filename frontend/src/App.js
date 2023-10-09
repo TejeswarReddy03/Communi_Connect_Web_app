@@ -1,5 +1,3 @@
-
-// src/App.js
 import React from 'react';
 import { BrowserRouter ,Route,Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,6 +7,7 @@ import Home from './pages/home';
 import Chats from './components/chats';
 import Maps from './components/maps';
 import Posts from './components/posts';
+import Viewmarkers from './components/viewmarkers'
 import Announcements from './components/announcements';
 
 function App() {
@@ -16,12 +15,14 @@ function App() {
     <div>
     <BrowserRouter>
       <Routes>
-        <Route  index element={<Login/>}/>
-        {/* <Route  element={<Home />} /> */}
+        {/* <Route  index element={<Home/>}/> */}
+        <Route index  element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        {/* <Route path="/login" element={<Login />} /> */}
         <Route path= "/home" element={<Home />} />
         <Route path="/chats" element={<Chats />} />
         <Route path="/maps" element={<Maps />} />
+        <Route path="/viewmarkers" element={<Viewmarkers />} />
         <Route path="/posts" element={<Posts />} />
         <Route path="/announcements" element={<Announcements />} />
       </Routes>

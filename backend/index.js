@@ -8,7 +8,13 @@ const passport=require('passport');
 const passportLocal =require('./config/passport-local-strategy');
 const usersController=require('./controllers/users_controller');
 const MongoStore = require('connect-mongo')(session);
+const cloudinary=require('cloudinary').v2;
 
+cloudinary.config({ 
+  cloud_name: 'dxs9co3sw', 
+  api_key: '916565758543593', 
+  api_secret: 'I5iivkukEGt54Qx4wpop-tAzggg' 
+});
 const app=express();
 app.use(express.json());
 const cookieParser = require('cookie-parser');
@@ -104,26 +110,26 @@ app.get('/api/posts', async (req, res) => {
       res.status(500).json({ error: 'An error while fetching posts.' });
     }
   });
-  const multer=require('multer');
-  let storage = multer.diskStorage({
-    destination: function (req,file,cb) {
-        cb(null,'../frontend/src/images');
-    },
-    filename: function (req,file,cb) {
-        //file.fieldname is avatar
-        cb(null,file.fieldname + '-' +Date.now());
-    }
-});
-  const upload = multer({storage:storage});
 
-  app.post('/api/posts',upload.single("avatar"),async(req,res)=>{
-    const {formData}=req.body;
-    console.log("heyyyyy",req.file.filename);
+//   const multer=require('multer');
+//   let storage = multer.diskStorage({
+//     destination: function (req,file,cb) {
+//         cb(null,'../frontend/src/images');
+//     },
+//     filename: function (req,file,cb) {
+//         //file.fieldname is avatar
+//         cb(null,file.fieldname + '-' +Date.now());
+//     }
+// });
+  //const upload = multer({storage:storage});
 
+  app.post('/api/posts',async(req,res)=>{
+
+    console.log(req.body);
     const NewPost=new Post({
         "username":req.body.username,
         "content":req.body.content,
-        "avatar":req.file.filename,
+        "avatar":req.body.avatar,
       
     
     });
@@ -133,13 +139,18 @@ app.get('/api/posts', async (req, res) => {
     .catch((error) => {
       console.error('Error saving document:', error);
     });
-  
-  
-  
-  
-  
   ;
   })
+/*
+app.post('/api/posts',async(req,res,next)=>{
+  console.log("d",req.files,"d");
+  const file=req.files;
+  cloudinary.uploader.upload(file.tempFilePath,(err,result)=>{
+    console.log(result);
+  })
+})
+
+*/
 
   // app.post("/upload-image",upload.single("image"),async(req,res)=>{
   //   res.send("uploaded");
@@ -224,6 +235,7 @@ createSession = async function (req, res) {
     'local'
 ),usersController.createSession);
 
+app.get('/destroy-session',usersController.destroySession);
 
 
   app.post('/create', async (req, res) => {
@@ -236,6 +248,7 @@ createSession = async function (req, res) {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+  
 /*
   app.post('/create-session', async (req, res) => {
     try {
@@ -253,6 +266,11 @@ createSession = async function (req, res) {
 
 app.get("/signout",usersController.destroySession);
   
+const fileupload= require('express-fileupload');
+app.use(fileupload({
+  useTempFiles:true
+}));
+
 app.listen(port,function (err){
     if(err){
         console.log("error in running the server",error);

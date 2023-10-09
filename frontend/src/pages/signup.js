@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios"; 
+import { useNavigate } from 'react-router-dom';
 
 
 function Signup(){
+    const navigate=useNavigate();
+
     const [formData, setFormData] = useState({
         user_name: "",
         email: "",
@@ -29,6 +32,8 @@ function Signup(){
           // Make an HTTP POST request to your backend server
           const response = await axios.post("http://localhost:8004/create", formData); // Replace "/api/register" with your backend endpoint
           console.log("Registration successful", response.data);
+          navigate('/login', { state: { userData: response.data } });
+
     
           // Optionally, you can redirect the user or perform other actions
         } catch (error) {
@@ -36,6 +41,10 @@ function Signup(){
         }
       };
     
+      const handlelogin=async(e)=>{
+        e.preventDefault();
+        navigate('/login');
+      }
 
     return(
         <div className="d-flex justify-content-center align-items-center bg-secondary vh-100">
@@ -116,7 +125,7 @@ function Signup(){
                         
                 </form>
                 <p><center>Already Have an Account??</center></p>
-                        <button className = "btn btn-default border w-100 bg-light rounded-10 text-decoration-none">
+                        <button onClick={handlelogin} className = "btn btn-default border w-100 bg-light rounded-10 text-decoration-none">
                             Login
                         </button>
             </div>

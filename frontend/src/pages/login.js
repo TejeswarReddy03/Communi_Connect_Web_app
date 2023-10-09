@@ -30,7 +30,6 @@ function Login() {
       console.log("Registration successful and this is the data of user", response.data);
      navigate('/home', { state: { userData: response.data } });
 
-      // Optionally, you can redirect the user or perform other actions
     } catch (error) {
       console.error("Registration failed", error);
     }

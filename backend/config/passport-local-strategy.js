@@ -12,10 +12,7 @@ passport.use(new LocalStrategy({
         User.findOne({email:email})
      
         .then((user)=>{
-                if(!user ||user.password != password){
-                    // req.flash('success','post published!');
-
-                    
+                if(!user ||user.password != password){                
                     return done(null,false);
                 } 
                 
