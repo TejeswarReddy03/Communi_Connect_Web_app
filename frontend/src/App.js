@@ -9,14 +9,14 @@ import Maps from './components/maps';
 import Posts from './components/posts';
 import Viewmarkers from './components/viewmarkers'
 import Announcements from './components/announcements';
-
+import Frontpage from './pages/frontpage';
 function App() {
   return (
     <div>
     <BrowserRouter>
       <Routes>
         {/* <Route  index element={<Home/>}/> */}
-        <Route index  element={<Login />} />
+        <Route index  element={< Frontpage/>} />
         <Route path="/signup" element={<Signup />} />
         {/* <Route path="/login" element={<Login />} /> */}
         <Route path= "/home" element={<Home />} />

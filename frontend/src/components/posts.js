@@ -76,7 +76,7 @@ function NewAnnouncementForm({setShouldFetch,setisformUploading}) {
            
           })
           .then(response=>{
-            setisformUploading(true);
+           // setisformUploading(true);
             setisformUploading(false);
           })
           ;
