@@ -26,35 +26,48 @@ To set up the Communi Connect Web App, follow these steps:
 
    ```bash
    cd backend
-   1.Install the required backend dependencies using npm:
-       npm install
-        If you encounter any errors during the installation process, you may need to install the dependencies explicitly. Run the following commands to install the dependencies separately:
-          example:npm install express
-                   npm install mongoose
+2.Install the required backend dependencies using npm:
+
+    
+    npm install
+If you encounter any errors during the installation process, you may need to install the dependencies explicitly. Run the following commands to install the dependencies separately:
+example:npm install express
+      npm install mongoose
 ### Frontend Installation
-1.Navigate to the 'frontend' folder:
- ```bash
+1. Navigate to the `frontend` folder:
+
+   ```bash
    cd frontend
-   1.Install the required frontend dependencies using npm:
-       npm install
-        If you encounter any errors during the installation process, you may need to install the dependencies explicitly. Run the following commands to install the dependencies separately.
+2.Install the required frontend dependencies using npm:
+
+    
+    npm install
+If you encounter any errors during the installation process, you may need to install the dependencies explicitly. Run the following commands to install the dependencies separately:
+example:npm install express
+      npm install mongoose
 
 ### Usage
 To run the Communi Connect Web App, follow these steps:
+## Starting frontend
+1.After installing dependencies, make sure to put your keys and configuration in a .env file in the root directory of backend folder and go to frontend dir:
 
-1.After installing dependencies, make sure to put your keys and configuration in a .env file in the root directory of both the backend and frontend folders.
+   ```bash
+   cd frontend
+   ```
 2.Start the frontend server:
-     ```bash
-        cd frontend
-        npm start
+
+   ```bash  
+    cd frontend
+    npm start
+   ```
 3.Start the backend server:
-    ```bash
-        cd backend
-        node ./index.js
-
-These commands will start both the frontend and backend components of the Communi Connect Web App. You can then access the application by opening it in your web browser.You can change the port as per the your system.
-
-
+   ```bash
+   cd backend
+   node ./index.js
+  ```
+These commands will start both the frontend and backend components of the Communi Connect Web App.
+You can then access the application by opening it in your web browser.
+You can change the port as per  your system.
 
 ## Features
 
