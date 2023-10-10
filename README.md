@@ -69,6 +69,8 @@ These commands will start both the frontend and backend components of the Commun
 You can then access the application by opening it in your web browser.
 You can change the port as per  your system.
 
+Note: Make sure you give origin of cors for socket.io(which is present in index.js of backend directory) same as the port in which frontend is running
+
 ## Features
 
 ### How to Use
