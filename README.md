@@ -19,6 +19,9 @@ To set up the Communi Connect Web App, follow these steps:
 
    ```bash
    git clone https://github.com/TejeswarReddy03/Communi_Connect_Web_app.git
+### Node Installation
+Node js version used in the project is 9.5.1.
+Make sure you install this node js version on your systems.
 
 ### Backend Installation
 
