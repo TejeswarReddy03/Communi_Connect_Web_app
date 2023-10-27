@@ -45,7 +45,7 @@ example:npm install express
 
     
     npm install
-If you encounter any errors during the installation process, you may need to install the dependencies explicitly. Run the following commands to install the dependencies separately:
+If you encounter any errors during the installation process, you may need to install the dependencies explicitly. Run the following commands to install the dependencies separately(All the versions of the packages can be seen in package.json file):
 example:npm install express
       npm install mongoose
 
@@ -63,7 +63,7 @@ To run the Communi Connect Web App, follow these steps:
     cd frontend
     npm start
    ```
-3.Insert Environmental api keys inside env.js file otherwise its not possible to run backend server.
+3.Insert Environmental api keys inside env.js file otherwise its not possible to run backend server.  
 4.Start the backend server:
    ```bash
    cd backend
