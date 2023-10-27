@@ -63,11 +63,13 @@ To run the Communi Connect Web App, follow these steps:
     cd frontend
     npm start
    ```
-3.Start the backend server:
+3.Insert Environmental api keys inside env.js file otherwise its not possible to run backend server.
+4.Start the backend server:
    ```bash
    cd backend
    node ./index.js
   ```
+
 These commands will start both the frontend and backend components of the Communi Connect Web App.
 You can then access the application by opening it in your web browser.
 You can change the port as per  your system.
