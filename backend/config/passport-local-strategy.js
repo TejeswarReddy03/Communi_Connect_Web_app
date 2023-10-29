@@ -9,13 +9,16 @@ passport.use(new LocalStrategy({
     passReqToCallback:true
     },
     function(req,email,password,done){
+        
         User.findOne({email:email})
      
         .then((user)=>{
+           
+            
                 if(!user ||user.password != password){                
                     return done(null,false);
                 } 
-                
+              
                     return done(null,user);
                 
             })
@@ -47,15 +50,21 @@ passport.deserializeUser(function(id,done){
 });
 
 passport.checkAuthentication = function(req,res,next){
+    console.log("in check authentication")
     if(req.isAuthenticated()){
+    
         return next();
     }
     return res.redirect('/users/sign-in');
 }
 passport.setAuthenticatedUser = function(req,res,next){
+ // console.log("in set authenticated user",req.user);
+
     if(req.isAuthenticated()){
+      //  console.log("in set authenticated user in authenticate",req.user);
         res.locals.user=req.user;
     }
+   // console.log(next);
     next();
 }
 
