@@ -23,9 +23,10 @@ const Home =()=> {
 
       </div>
     
-
    </div>
   )
+  
 }
+<script src="//code.tidio.co/jqxujrlpdcggdkvbnqko2czvptdxym3l.js" async></script>
 
 export default Home
