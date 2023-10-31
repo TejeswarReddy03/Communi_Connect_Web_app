@@ -10,6 +10,8 @@ import Posts from './components/posts';
 import Viewmarkers from './components/viewmarkers'
 import Announcements from './components/announcements';
 import Frontpage from './pages/frontpage';
+import Startpage from './pages/startpage';
+import FrontpageAdmin from './pages/frontpageadmin';
 import Homepage from './Home';
 function App() {
   return (
@@ -17,7 +19,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* <Route  index element={<Home/>}/> */}
-        <Route index  element={< Frontpage/>} />
+        <Route index element ={<Startpage />} />
+        <Route path='/frontpage_user'  element={< Frontpage/>} />
+        <Route path='/frontpage_admin'  element={< FrontpageAdmin/>} />
         <Route path="/signup" element={<Signup />} />
         {/* <Route path="/login" element={<Login />} /> */}
         <Route path= "/home" element={<Homepage />} />

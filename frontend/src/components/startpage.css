@@ -1,0 +1,6 @@
+.startpagediv>div{
+   color: white;
+   margin: 10px 50px 10px 50px;
+   background-color: chocolate;
+   display: inline-block;
+}
