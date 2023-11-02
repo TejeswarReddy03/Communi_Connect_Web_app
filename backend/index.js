@@ -31,6 +31,7 @@ app.use(cookieParser());
 const User = require("./models/user");
 const Announcements = require("./models/announcements");
 const Post = require("./models/posts");
+const Comment = require("./models/comment")
 const Markers = require("./models/maps");
 const Conversations = require('./models/conversation');
 const Messages = require('./models/messages');
@@ -222,11 +223,29 @@ app.get('/api/getMarker', async (req, res) => {
   }
 });
 
+/*
 app.get('/api/posts', async (req, res) => {
   try {
 
+  
+
+
     const query = {};
     const posts = await Post.find(query);
+  
+    Post.findById(postId)
+  .populate('comments') 
+  .exec(function(err, post) {
+    if (err) {
+      
+      console.error(err);
+    } else {
+      
+      console.log(post.comments); 
+    }
+  });
+
+
     //console.log(facts);
     console.log("logging posts");
     res.json(posts);
@@ -235,6 +254,41 @@ app.get('/api/posts', async (req, res) => {
     res.status(500).json({ error: 'An error while fetching posts.' });
   }
 });
+
+app.get('/api/comments', async (req, res) => {
+  
+  try {
+
+    const query = {};
+    const comments = await Comment.find(query);
+    //console.log(facts);
+    console.log("logging posts");
+    res.json(comments);
+  } catch (error) {
+    console.error('Error fetching announcements:', error);
+    res.status(500).json({ error: 'An error while fetching posts.' });
+  }
+});
+*/
+
+app.get('/api/posts', async (req, res) => {
+  try {
+    
+    const posts = await Post.find({});
+
+    const populatedPosts = await Post.populate(posts, { path: 'comments' });
+
+    console.log("Logging populated posts:", populatedPosts);
+
+    res.json(populatedPosts);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ error: 'An error occurred while fetching posts.' });
+  }
+});
+
+
+
 
 //   const multer=require('multer');
 //   let storage = multer.diskStorage({
@@ -266,6 +320,80 @@ app.post('/api/posts', async (req, res) => {
     });
   ;
 })
+
+
+app.post('/api/delete_post', async (req, res) => {
+  try {
+    const postId = req.body.postid;
+
+    // Use Mongoose to find and delete the post by its ID
+    console.log(postId);
+    const deletedPost = await Post.findOneAndDelete({ _id: postId });
+
+    if (deletedPost) {
+      console.log('Post deleted successfully:', deletedPost);
+      res.status(200).json({ message: 'Post deleted successfully' });
+    } else {
+      console.error('Post not found or could not be deleted.');
+      res.status(404).json({ message: 'Post not found or could not be deleted' });
+    }
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+
+app.get('/', (req, res) => {
+  const data = { key: 'valueees' };
+  res.json(data);
+});
+
+
+app.post('/api/comments', async (req, res) => {
+
+  Post.findById(req.body.postid)
+  .then((postt)=>{
+      if(postt){
+        console.log("ihi",req.body.postid,req.body.userr,"op");
+          Comment.create({
+              content : req.body.content,
+              post : req.body.postid,
+              user : req.body.userr
+              
+          })
+          .then ((comment)=>{
+            console.log("comment");
+            postt.comments = postt.comments || [];
+              postt.comments.push(comment);
+              postt.save();
+  
+
+              res.redirect('/');
+          })
+          .catch((err)=>{
+              console.log("err",err);
+                  return;
+          });
+
+      }
+  })
+
+  .catch((err)=>{
+      console.log(err);
+          return;
+  });
+
+
+  
+
+
+
+  
+})
+
+
 /*
 app.post('/api/posts',async(req,res,next)=>{
   console.log("d",req.files,"d");

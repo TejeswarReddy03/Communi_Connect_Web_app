@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 function Posts() {
   const [posts, setPosts] = useState([]);
   const [shouldFetch, setShouldFetch] = useState(true);
   const [isformUploading, setisformUploading] = useState(false);
+  const [comments, setComments] = useState([]);
+
+
+
 
   useEffect(() => {
     async function getPosts() {
@@ -13,8 +18,9 @@ function Posts() {
         //console.log()
         setShouldFetch(true);
         const response = await axios.get('http://localhost:8004/api/posts', {});
-        console.log(response.data);
+        
         setPosts(response.data);
+        // setComments(comments.data);
       } catch (error) {
         console.error('Error fetching posts:', error);
       } finally {
@@ -34,6 +40,7 @@ function Posts() {
         annData={posts}
         setShouldFetch={setShouldFetch}
         setisformUploading={setisformUploading}
+        
       />}
       
     </>
@@ -76,7 +83,7 @@ function NewAnnouncementForm({setShouldFetch,setisformUploading}) {
            
           })
           .then(response=>{
-           // setisformUploading(true);
+          
             setisformUploading(false);
           })
           ;
@@ -149,25 +156,112 @@ function NewAnnouncementForm({setShouldFetch,setisformUploading}) {
 }
 function ShowAnnouncements(props) {
   const announcementData = props.annData;
+  // const commentsData = props.comData;
+  const [contents, setPosts] = useState('d');
+  console.log(announcementData);
+
+  const location = useLocation();
+  const userState = location.state;
+  const userData = userState ? userState.userData : null;
+// console.log(commentsData);
+
+  async function handleSubmit(e,postId) {
+    e.preventDefault();
+   // const postdata=new FormData();
+  //  console.log("hiii",postId);
+   // setisformUploading(true);
+  
+    async function posttoapii() {
+      try{
+      await axios.post("http://localhost:8004/api/comments", { content: contents, userr: userData.id,postid:postId });
+    }
+    catch(error){
+      console.log("error",error);
+    }
+       }
+       posttoapii();
+
+    //postdata.append("comment", contents);
+    
+// console.log(user_name);
+console.log(contents);
+ 
+
+      // setisformUploading(true);
+  } 
+
+  async function delete_post(e,postId) {
+    e.preventDefault();
+  
+  async function posttoapii() {
+      try{
+      await axios.post("http://localhost:8004/api/delete_post", {postid:postId });
+    }
+    catch(error){
+      console.log("error",error);
+    }
+       }
+       posttoapii();
+
+
+      // setisformUploading(true);
+  } 
+
+
+
+
   return (
     <div>
       <NewAnnouncementForm setShouldFetch={props.setShouldFetch} setisformUploading={props.setisformUploading} />
-
+      
       <ul>
         {announcementData &&
           announcementData.map((x) => (
             <li key={x._id} className="announcement-item">
-  <div className="announcement-content">
-    <p className="mb-0">{x.content}</p>
-    <p className="announcement-date">
-      Created at {new Date(x.createdAt).toLocaleString()}
-    </p>
-  </div>
   {x.avatar && (
     <div className="announcement-image">
       <img src={x.avatar} alt="Avatar" className="img-fluid" width="300" height="200"/>
     </div>
   )}
+  <div className="announcement-content">
+    
+  
+
+          {x.content}
+
+    <p className="announcement-date">
+      Created at {new Date(x.createdAt).toLocaleString()}
+    </p>
+    <button onClick={(e)=>{delete_post(e,x._id)}}>Delete Post</button>
+  </div>
+
+  <form onSubmit={(e)=>{handleSubmit(e,x._id)}} className="my-4">
+  <div className="mb-3">
+    {/* <label htmlFor="posts" className="form-label">
+      
+    </label> */}
+    <input
+      type="text"
+      placeholder="Type something..."
+      name="comments"
+      className="form-control rounded-10"
+      onChange={(e) => setPosts(e.target.value)}
+    />
+  </div>
+    <input type="hidden" name="post" value={x._id} />
+    <button type="submit" className="btn btn-success btn-lg rounded-10">
+    Comment
+  </button>
+  </form>
+  <strong>Comments</strong>
+  {x.comments.map((comment) => (
+            <p key={comment._id} className="mb-0">
+              {comment.content} 
+            </p>
+            
+          ))}
+
+
 </li>
 
           ))}
