@@ -15,12 +15,12 @@ function FrontpageAdmin() {
   const navigate = useNavigate();
   const [isSignIn, toggleSignIn] = useState(true);
   const [errorwithpincode, setError] = useState('');
-  const [errorwithemail,setErroremail]=useState('');
-  const [errorsigninemail,setErrorsigninemail]=useState('');
-  const [errorsigninadminid,setErrorsigninadminid]=useState('');
-  const [errorsigninpwd,setErrorsigninpwd]=useState('');
-  const [errorwithadminpincode,setErrorwithadminpincode]=useState('');
-  const [errorwithcnfpwd,setErrorwithcnfpwd]=useState('');
+  const [errorwithemail, setErroremail] = useState('');
+  const [errorsigninemail, setErrorsigninemail] = useState('');
+  const [errorsigninadminid, setErrorsigninadminid] = useState('');
+  const [errorsigninpwd, setErrorsigninpwd] = useState('');
+  const [errorwithadminpincode, setErrorwithadminpincode] = useState('');
+  const [errorwithcnfpwd, setErrorwithcnfpwd] = useState('');
   const [formDatalogin, setFormDatalogin] = useState({
     email: '',
     password: '',
@@ -36,9 +36,9 @@ function FrontpageAdmin() {
   const handleSubmitSignUp = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     if (errorwithpincode) {
-        // If there's an error, prevent the form submission
-        return;
-      }
+      // If there's an error, prevent the form submission
+      return;
+    }
     try {
       // Make an HTTP POST request to your backend server
       const response = await axios.post("http://localhost:8004/create_admin", formDatasignup); // Replace "/api/register" with your backend endpoint
@@ -50,19 +50,20 @@ function FrontpageAdmin() {
       toggleSignIn(true);
     } catch (error) {
       console.error('Registration failed', error);
-      if(error.response.data.field==='email'){
-     setErroremail('AN ADMIN ALREADY EXISTS WITH SUCH EMAIL')
-     setErrorwithcnfpwd('');
-     setErrorwithadminpincode('');
+
+      if (error.response.data.field === 'email') {
+        setErroremail('AN ADMIN ALREADY EXISTS WITH SUCH EMAIL')
+        setErrorwithcnfpwd('');
+        setErrorwithadminpincode('');
 
       }
-      else if(error.response.data.field==='pincode'){
+      else if (error.response.data.field === 'pincode') {
         setErrorwithadminpincode('AN ADMIN ALREADY EXISTS FOR THAT PINCODE');
         setErrorwithcnfpwd('');
         setErroremail('');
 
       }
-      else if(error.response.data.field==='cnfpwd'){
+      else if (error.response.data.field === 'cnfpwd') {
         setErrorwithcnfpwd('confirm password does not match with originalpassword');
         setErrorwithadminpincode('');
         setErroremail('');
@@ -78,35 +79,41 @@ function FrontpageAdmin() {
     try {
       // Make an HTTP POST request to your backend server
       //check if adminID matches
-      const adminIDToCheck=formDatalogin.adminID;
-      const adminemail=formDatalogin.email;
+      const adminIDToCheck = formDatalogin.adminID;
+      const adminemail = formDatalogin.email;
       const adminCheckResponse = await axios.get(`http://localhost:8004/check-adminID?adminID=${adminIDToCheck}&adminemail=${adminemail}`);
       const response = await axios.post("http://localhost:8004/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
       setErrorsigninadminid('');
       setErrorsigninemail('');
       setErrorsigninpwd('');
-     navigate('/home', { state: { userData: response.data } });
+      navigate('/home', { state: { userData: response.data } });
 
 
       // Optionally, you can redirect the user or perform other actions
     } catch (error) {
       console.error('Login failed', error);
-      if(error.response.data.field==='email'){
+      if (error.response.data.field === 'noAdminEmail') {
         setErrorsigninemail('No such email exists')
         setErrorsigninadminid('');
         setErrorsigninpwd('');
-         }
-        else if(error.response.data.field==='adminid'){
-            setErrorsigninadminid('Admin Id is incorrect');
+      }
+      else if (error.response.data.field === 'email') {
+        setErrorsigninemail('No such email exists')
+        setErrorsigninadminid('');
+        setErrorsigninpwd('');
+      }
+      else if (error.response.data.field === 'adminid') {
+        setErrorsigninadminid('Admin Id is incorrect');
         setErrorsigninpwd('');
         setErrorsigninemail('')
 
-             }
-        else {setErrorsigninpwd('Password is incorrect');
+      }
+      else {
+        setErrorsigninpwd('Password is incorrect');
         setErrorsigninadminid('');
         setErrorsigninemail('')
-    }
+      }
     }
   };
 
@@ -119,30 +126,30 @@ function FrontpageAdmin() {
   };
   const handleInputChangesignup = (event) => {
     const { name, value } = event.target;
-    
+
     setFormDatasignup({
       ...formDatasignup,
       [name]: value,
     });
     if (name === "pincode") {
-        if (!/^\d{6}$/.test(value)) {
-          // If the Pincode is not 6 digits, show an error message or prevent form submission
-          // For this example, I'm setting an error message.
-          setError('Pincode must be exactly 6 digits.');
-        } else {
-          // If the Pincode is valid, clear the error message
-          setError('');
-        }
+      if (!/^\d{6}$/.test(value)) {
+        // If the Pincode is not 6 digits, show an error message or prevent form submission
+        // For this example, I'm setting an error message.
+        setError('Pincode must be exactly 6 digits.');
+      } else {
+        // If the Pincode is valid, clear the error message
+        setError('');
       }
-      if(name==='confirm_password'){
-        if (value !== formDatasignup.password) {
-            setErrorwithcnfpwd('Confirm password does not match with the original password');
-          } else {
-            setErrorwithcnfpwd('');
-          }
+    }
+    if (name === 'confirm_password') {
+      if (value !== formDatasignup.password) {
+        setErrorwithcnfpwd('Confirm password does not match with the original password');
+      } else {
+        setErrorwithcnfpwd('');
       }
+    }
   };
- 
+
   return (
     <div>
       <Components.Container >
@@ -157,15 +164,15 @@ function FrontpageAdmin() {
                 onChange={handleInputChangelogin}
                 required // Make email field mandatory
               />
-              {errorsigninemail&&<p>{errorsigninemail}</p>}
-               <Components.Input
+              {errorsigninemail && <p>{errorsigninemail}</p>}
+              <Components.Input
                 type="text"
                 name="adminID"
                 placeholder="Admin ID"
                 onChange={handleInputChangelogin}
                 required // Make email field mandatory
               />
-              {errorsigninadminid&&<p>{errorsigninadminid}</p>}
+              {errorsigninadminid && <p>{errorsigninadminid}</p>}
 
               <Components.Input
                 type="password"
@@ -174,7 +181,7 @@ function FrontpageAdmin() {
                 onChange={handleInputChangelogin}
                 required // Make password field mandatory
               />
-              {errorsigninpwd&&<p>{errorsigninpwd}</p>}
+              {errorsigninpwd && <p>{errorsigninpwd}</p>}
               <Components.Anchor href="#">Forgot your password?</Components.Anchor>
               <Components.Button type="submit">Sign In</Components.Button>
             </Components.Form>
@@ -190,7 +197,7 @@ function FrontpageAdmin() {
                 onChange={handleInputChangesignup}
                 required // Make name field mandatory
               />
-               <Components.Input
+              <Components.Input
                 type="number"
                 name="pincode"
                 placeholder="Pincode(NoAlphabets)"
@@ -198,7 +205,7 @@ function FrontpageAdmin() {
                 required // Make email field mandatory
               />
               {errorwithpincode && <p>{errorwithpincode}</p>}
-              {errorwithadminpincode&& <p>{errorwithadminpincode}</p>}
+              {errorwithadminpincode && <p>{errorwithadminpincode}</p>}
               <Components.Input
                 type="email"
                 name="email"
@@ -214,14 +221,14 @@ function FrontpageAdmin() {
                 onChange={handleInputChangesignup}
                 required // Make password field mandatory
               />
-                <Components.Input
+              <Components.Input
                 type="password"
                 name="confirm_password"
                 placeholder="confirm_Password"
                 onChange={handleInputChangesignup}
                 required // Make password field mandatory
               />
-              {errorwithcnfpwd&&<p>{errorwithcnfpwd}</p>}
+              {errorwithcnfpwd && <p>{errorwithcnfpwd}</p>}
               <Components.Button type="submit">Sign Up</Components.Button>
             </Components.Form>
           </Components.SignUpContainer>
@@ -251,8 +258,8 @@ function FrontpageAdmin() {
           </Components.Overlay>
         </Components.OverlayContainer>
       </Components.Container>
-      </div>
-    
+    </div>
+
   );
 }
 

@@ -44,9 +44,10 @@ function Frontpage() {
 
     try {
       // Make an HTTP POST request to your backend server
+      const adminCheckResponse = await axios.get(`http://localhost:8004/check-ifadmin?adminemail=${formDatalogin.email}`);
       const response = await axios.post("http://localhost:8004/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
-     navigate('/home', { state: { userData: response.data } });
+     navigate('/home', { state: { userData: response.data} });
 
 
       // Optionally, you can redirect the user or perform other actions

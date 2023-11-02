@@ -7,6 +7,7 @@ const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy');
 const usersController = require('./controllers/users_controller');
+const { translate } = require('bing-translate-api');
 const crypto = require('crypto');
 const MongoStore = require('connect-mongo')(session);
 const cloudinary = require('cloudinary').v2;
@@ -158,6 +159,29 @@ app.get('/api/announcements', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching facts.' });
   }
 });
+
+app.get('/api/announcements/lang', async (req, res) => {
+  try {
+    const originalString = req.query.announcement;
+    console.log(originalString);
+    const to = req.query.language;
+
+    const translationResult = await translate(originalString, null, to);
+    
+    if (translationResult && translationResult.translation) {
+      const translatedString = translationResult.translation;
+      console.log(translatedString);
+      res.json({ announcement: translatedString });
+    } else {
+      console.error('Translation result is not in the expected format:', translationResult);
+      res.status(500).json({ error: 'Translation error' });
+    }
+  } catch (error) {
+    console.error('Error fetching announcements:', error);
+    res.status(500).json({ error: 'An error occurred while fetching facts.' });
+  }
+});
+
 
 app.post('/api/announcements', async (req, res) => {
   const { announcement, pincode } = req.body;
@@ -535,14 +559,34 @@ createSession = async function (req, res) {
     }
   };
   */
-
+  app.get('/check-ifadmin',async(req,res)=>{
+    console.log("check-ifID req received")
+   
+    const adminemail=req.query.adminemail;
+    try{
+      
+      console.log("before finding admin with email ",adminemail);
+      const user = await User.findOne({ email: adminemail });
+      if(user.isAdmin==true){
+        return res.status(400).json({message:'user is actually admin',field:'noAdminEmail'});
+      }
+      return res.status(200).json({ message: 'User is not an admin' });
+    }
+    catch(error){
+      return res.status(500).json({ message: 'Error occurred while checking admin status' });
+    }
+  })
 app.get('/check-adminID',async(req,res)=>{
   console.log("check-adminID req received")
   const adminIDToCheck = req.query.adminID;
   const adminemail=req.query.adminemail;
   try{
+    
     console.log("before finding admin with email ",adminemail);
     const user = await User.findOne({ email: adminemail });
+    if(user.isAdmin==false){
+      return res.status(400).json({message:'No admin with such email',field:'noAdminEmail'});
+    }
     if (!user) {
       return res.status(400).json({ message: 'User not found',field:'email' });
     }
