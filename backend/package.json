@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/TejeswarReddy03/Communi_Connect_Web_app#readme",
   "dependencies": {
+    "bing-translate-api": "^2.9.2",
     "body-parser": "^1.20.2",
     "cloudinary": "^1.41.0",
     "connect-mongo": "^3.2.0",

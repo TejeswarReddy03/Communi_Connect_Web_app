@@ -48,7 +48,10 @@ import {
       id: "viewmarkers",
       title: "viewmarkers",
     },
-    
+    {
+      id: "multilingannc",
+      title:"multilingannc"
+    }
 
   ];
   
