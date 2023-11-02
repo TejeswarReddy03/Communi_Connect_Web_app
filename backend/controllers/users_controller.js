@@ -31,7 +31,8 @@ const emailofuser=req.user.email;
 const pincodeofuser=req.user.pincode;
 const nameofuser = req.user.name;
 const idofuser = req.user.id;
-const jsonData = { authstatus:1 ,email:emailofuser,pincode:pincodeofuser,name:nameofuser,id:idofuser};
+const isitadmin=req.user.isAdmin;
+const jsonData = { authstatus:1 ,email:emailofuser,pincode:pincodeofuser,name:nameofuser,id:idofuser,isAdmin:isitadmin};
 // // Encode the JSON object as a query parameter
  const jsonDataEncoded = encodeURIComponent(JSON.stringify(jsonData));
 

@@ -14,6 +14,11 @@ import * as Components from '../styles/Components';
 function Frontpage() {
   const navigate = useNavigate();
   const [isSignIn, toggleSignIn] = useState(true);
+ const [errorloginuser,setErrorloginuser]=useState('');
+ const [errorsignupuser,setErrorsignupuser]=useState('');
+ const [errorsignuppincode,setErrorsignuppincode]=useState('');
+ const [errorsignupconfrm,setErrorsignupconfrm]=useState('');
+ 
   const [formDatalogin, setFormDatalogin] = useState({
     email: '',
     password: '',
@@ -33,9 +38,14 @@ function Frontpage() {
       // Make an HTTP POST request to your backend server
       const response = await axios.post("http://localhost:8004/create", formDatasignup); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful", response.data);
+      setErrorsignupuser('');
+      setErrorsignupconfrm('');
+      setErrorsignuppincode('');
+      
       toggleSignIn(true);
     } catch (error) {
       console.error('Registration failed', error);
+      setErrorsignupuser('Entered fields are incorrect');
     }
   };
 
@@ -44,14 +54,19 @@ function Frontpage() {
 
     try {
       // Make an HTTP POST request to your backend server
+      const adminCheckResponse = await axios.get(`http://localhost:8004/check-ifadmin?adminemail=${formDatalogin.email}`);
       const response = await axios.post("http://localhost:8004/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
-     navigate('/home', { state: { userData: response.data } });
+      setErrorloginuser('');
+      
+     navigate('/home', { state: { userData: response.data} });
 
 
       // Optionally, you can redirect the user or perform other actions
     } catch (error) {
       console.error('Login failed', error);
+      setErrorloginuser('Invalid username or password');
+     
     }
   };
 
@@ -68,6 +83,23 @@ function Frontpage() {
       ...formDatasignup,
       [name]: value,
     });
+    if (name === "pincode") {
+      if (!/^\d{6}$/.test(value)) {
+        // If the Pincode is not 6 digits, show an error message or prevent form submission
+        // For this example, I'm setting an error message.
+        setErrorsignuppincode('Pincode must be exactly 6 digits.');
+      } else {
+        // If the Pincode is valid, clear the error message
+        setErrorsignuppincode('');
+      }
+    }
+    if (name === 'confirm_password') {
+      if (value !== formDatasignup.password) {
+        setErrorsignupconfrm('Confirm password does not match with the original password');
+      } else {
+        setErrorsignupconfrm('');
+      }
+    }
   };
  
   return (
@@ -84,6 +116,7 @@ function Frontpage() {
                 onChange={handleInputChangelogin}
                 required // Make email field mandatory
               />
+           
               <Components.Input
                 type="password"
                 name="password"
@@ -91,6 +124,7 @@ function Frontpage() {
                 onChange={handleInputChangelogin}
                 required // Make password field mandatory
               />
+              {errorloginuser&&<p>{errorloginuser}</p>}
               <Components.Anchor href="#">Forgot your password?</Components.Anchor>
               <Components.Button type="submit">Sign In</Components.Button>
             </Components.Form>
@@ -120,6 +154,7 @@ function Frontpage() {
                 onChange={handleInputChangesignup}
                 required // Make email field mandatory
               />
+               {errorsignuppincode&&<p>{errorsignuppincode}</p>}
               <Components.Input
                 type="password"
                 name="password"
@@ -134,6 +169,8 @@ function Frontpage() {
                 onChange={handleInputChangesignup}
                 required // Make password field mandatory
               />
+              {errorsignupconfrm&&<p>{errorsignupconfrm}</p>}
+             {errorsignupuser&&<p>{errorsignupuser}</p>}
               <Components.Button type="submit">Sign Up</Components.Button>
             </Components.Form>
           </Components.SignUpContainer>

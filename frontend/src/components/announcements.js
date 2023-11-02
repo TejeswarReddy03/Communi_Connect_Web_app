@@ -13,7 +13,8 @@ function Announcements() {
   const location = useLocation();
   const userstate = location.state;
   const userdata=userstate.userData;
-
+  console.log(userdata);
+   const userIsAdmin=userdata.isAdmin;
   useEffect(() => {
     async function getAnnouncements() {
       setIsLoading(true);
@@ -70,13 +71,13 @@ function Announcements() {
   useEffect(()=>{
  if(isLoading===false) setIsformUploading(isLoading);
   },[isLoading])
-
+console.log(userIsAdmin);
   return (
     <div className='entireannc'>
     <div className='body-annc'>
       {/* <h1>userdata in announcement is {userdata.email}</h1> */}
-      <Header showform={showform} setshowform={setshowform} />
-      {showform?(<NewAnnouncementForm setAnnouncements={setAnnouncements} userdata={userdata} setshowform={setshowform} setIsLoading={setIsLoading} setIsformUploading={setIsformUploading}/>):null}
+      <Header showform={showform} setshowform={setshowform} userIsAdmin={userIsAdmin}/>
+      {(showform&&userIsAdmin)?(<NewAnnouncementForm setAnnouncements={setAnnouncements} userdata={userdata} setshowform={setshowform} setIsLoading={setIsLoading} setIsformUploading={setIsformUploading}/>):null}
       <main className='main-annc'>
 
         <CategoryFilter setcurrentcategory={setcurrentcategory} setshowfilterform={setshowfilterform} showfilterform={showfilterform} setselectedfilterdate={setselectedfilterdate}/>
@@ -86,7 +87,7 @@ function Announcements() {
     </div>
     </div>
   );
-}function Header({ showform, setshowform }) {
+}function Header({ showform, setshowform,userIsAdmin }) {
   const appTitle = 'ANNOUNCEMENTS';
 
   return (
@@ -95,13 +96,13 @@ function Announcements() {
         <img src='https://tse1.mm.bing.net/th?id=OIP.fBqF8Upvh5hMgBWq0LUsWAHaHx&pid=Api&P=0&h=180' height='68' width='68' alt='Today I Learned Logo' />
         <h1>{appTitle}</h1>
       </div>
-
-      <button
+    {userIsAdmin?
+      (<button
         className='btn-annc btn-large-annc btn-open-annc'
         onClick={() => setshowform((show) => !show)}
       >
         {showform ? 'Close' : 'Post'}
-      </button>
+      </button>):null}
     </header>
   );
 }
