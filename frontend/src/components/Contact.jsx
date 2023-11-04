@@ -6,7 +6,9 @@ import { styles } from "../styles";
 import { EarthCanvas } from "./canvas";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
-
+//template_kd61e9n
+//service_6jeq3xm
+//WWxSazaW0ovsBoDuj
 const Contact = () => {
   const formRef = useRef();
   const [form,setForm]=useState({
@@ -15,8 +17,41 @@ const Contact = () => {
     message:'',
     });
     const [loading,setLoading] = useState(false);
-    const handleChange = (e) =>{}
-    const handleSubmit = (e) =>{}
+    const handleChange = (e) =>{
+      const { name , value } = e.target;
+      
+      setForm({ ...form, [name]: value})
+    }
+    const handleSubmit = (e) =>{
+      e.preventDefault();
+      setLoading(true);
+      emailjs.send('service_6jeq3xm', 'template_kd61e9n',
+      {
+        from_name:form.name,
+        to_name:'shanmukh',
+        from_email:form.email,
+        to_email:'devineni.shanmukh@gmail.com',
+        message:form.message,
+      },
+        'WWxSazaW0ovsBoDuj'
+      )
+      .then(()=>{
+        setLoading(false);
+        alert('Thankyou, for your review');
+
+        setForm({
+          name:'',
+          email:'',
+          message:'',
+
+        })
+      }, (error) => {
+        setLoading(false)
+        console.log(error);
+        alert('smtg went wrong')
+      }
+      )
+    }
   return (
     <div
     className="xl:mt-12 xl:flex-row flex-col-reverse flex gap-10 overflow-hidden">
