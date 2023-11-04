@@ -170,7 +170,7 @@ app.get('/api/announcements/lang', async (req, res) => {
     
     if (translationResult && translationResult.translation) {
       const translatedString = translationResult.translation;
-      console.log(translatedString);
+    //  console.log(translatedString);
       res.json({ announcement: translatedString });
     } else {
       console.error('Translation result is not in the expected format:', translationResult);
@@ -341,12 +341,15 @@ app.post('/api/posts', async (req, res) => {
   console.log("heyy",req.body.userid);
   await NewPost.save().then((savedDocument) => {
     console.log('Document saved successfully:', savedDocument);
-    return res.status(201).json({message:"User created Succesfully"})
+
+    return res.status(201).json({ message: "User created successfully" });
+
   })
     .catch((error) => {
       console.error('Error saving document:', error);
     });
-  ;
+  
+ 
 })
 
 app.post('/api/postslike', async (req, res) => {
