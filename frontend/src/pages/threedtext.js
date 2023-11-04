@@ -1,6 +1,7 @@
-import {useMatcapTexture,Center,OrbitControls,Text3D } from '@react-three/drei'
-import {useRef, useState } from 'react'
+import {useMatcapTexture,Center,OrbitControls,Text3D,Sparkles } from '@react-three/drei'
+import {useRef, useState,Suspense } from 'react'
 import { useFrame } from '@react-three/fiber';
+
 export default function Experience()
 {
     const donut=useRef()
@@ -8,17 +9,20 @@ export default function Experience()
     const [matcaptexture]=useMatcapTexture('7B5254_E9DCC7_B19986_C8AC91',256)
     useFrame((state,delta)=>
     {
-        console.log("hi")
+        
         for(const don of donut.current.children ){
             don.rotation.y+=delta*0.2;
         }
     })
 
     return <>
+    
 
-
-        <OrbitControls makeDefault />
+        {/* <Sparkles scale={100}/> */}
+        <OrbitControls makeDefault enableZoom={false} enableZoomPan={false}/>
+       
         <torusGeometry ref={setTorusGeometry} args={[1,0.6,16,32]}/>
+
 <Center>
        <Text3D font="./fonts/helvetiker_regular.typeface.json"
        size={0.75}
@@ -34,6 +38,8 @@ export default function Experience()
         Communi Connect
         <meshMatcapMaterial matcap={matcaptexture}/>
        </Text3D>
+
+      
        </Center>
        <group ref={donut}>
        {[...Array(75)].map((value,index)=> 
@@ -64,6 +70,6 @@ export default function Experience()
        }
        </group>
       
-    
+       
     </>
 }
