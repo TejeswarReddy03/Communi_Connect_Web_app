@@ -297,6 +297,7 @@ app.get('/api/comments', async (req, res) => {
 
 app.get('/api/posts', async (req, res) => {
   try {
+    console.log("posts called");
     
     const posts = await Post.find({});
 
@@ -328,14 +329,16 @@ app.get('/api/posts', async (req, res) => {
 
 app.post('/api/posts', async (req, res) => {
 
-  console.log(req.body);
+  
   const NewPost = new Post({
     "username": req.body.username,
     "content": req.body.content,
     "avatar": req.body.avatar,
+    "user":req.body.userid,
 
 
   });
+  console.log("heyy",req.body.userid);
   await NewPost.save().then((savedDocument) => {
     console.log('Document saved successfully:', savedDocument);
   })
@@ -344,6 +347,49 @@ app.post('/api/posts', async (req, res) => {
     });
   ;
 })
+
+app.post('/api/postslike', async (req, res) => {
+  const { postId, userId } = req.body;
+
+  try {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+
+    if (post.likedBy.includes(userId)) {
+      // User already liked the post, remove the like
+      console.log("if working");
+      console.log('Before filtering:', post.likedBy);
+      const index = post.likedBy.indexOf(userId);
+      if (index !== -1) {
+        post.likedBy.splice(index, 1); // Remove the element at the found index
+        post.likes = post.likes - 1;
+      }
+      console.log('After filtering:', post.likedBy);
+      //console.log(post);
+      
+    } else {
+      // User hasn't liked the post, add the like
+      console.log("else working");
+      post.likedBy.push(userId);
+      post.likes = post.likes + 1;
+    }
+
+    const updatedPost = await post.save();
+    res.json(updatedPost);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+
+
+
 
 
 app.post('/api/delete_post', async (req, res) => {
@@ -356,6 +402,28 @@ app.post('/api/delete_post', async (req, res) => {
 
     if (deletedPost) {
       console.log('Post deleted successfully:', deletedPost);
+      res.status(200).json({ message: 'Post deleted successfully' });
+    } else {
+      console.error('Post not found or could not be deleted.');
+      res.status(404).json({ message: 'Post not found or could not be deleted' });
+    }
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+app.post('/api/delete_comment', async (req, res) => {
+  try {
+    const commentId = req.body.commentid;
+
+    // Use Mongoose to find and delete the post by its ID
+   console.log(commentId);
+    const deletedComment = await Comment.findOneAndDelete({ _id: commentId });
+
+    if (deletedComment) {
+      console.log('Post deleted successfully:', deletedComment);
       res.status(200).json({ message: 'Post deleted successfully' });
     } else {
       console.error('Post not found or could not be deleted.');
