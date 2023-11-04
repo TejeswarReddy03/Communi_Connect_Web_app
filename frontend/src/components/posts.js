@@ -24,9 +24,9 @@ function Posts() {
     getPosts();
   }, [isformUploading]);
 
-  useEffect(() => {
-    if (shouldFetch == false) setisformUploading(shouldFetch);
-  }, [shouldFetch]);
+  // useEffect(() => {
+  //   if (shouldFetch == false) setisformUploading(shouldFetch);
+  // }, [shouldFetch]);
 
   return (
     <>
@@ -59,6 +59,7 @@ function NewAnnouncementForm({setShouldFetch,setisformUploading}) {
       async function posttoapi() {
         try {
            console.log("yes");
+           setisformUploading(true);
           const data=new FormData();
           data.append("file",image);
           data.append("upload_preset","cloggxrh");
@@ -72,12 +73,14 @@ function NewAnnouncementForm({setShouldFetch,setisformUploading}) {
             setImage(data.url.toString());
            
             console.log("heyy image url is ",data.url.toString());
-             axios.post("http://localhost:8004/api/posts",{ username:user_name,content:contents,avatar:data.url.toString()
+         axios.post("http://localhost:8004/api/posts",{ username:user_name,content:contents,avatar:data.url.toString()
            
           })
           .then(response=>{
+            console.log("in the then of posttoapi")
            // setisformUploading(true);
             setisformUploading(false);
+           
           })
           ;
          
@@ -94,8 +97,8 @@ function NewAnnouncementForm({setShouldFetch,setisformUploading}) {
         }
       }
         
-        posttoapi();
-        setisformUploading(true);
+       await  posttoapi();
+       
     } 
 
   function onimginputchange(e){

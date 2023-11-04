@@ -284,11 +284,14 @@ app.post('/api/posts', async (req, res) => {
   });
   await NewPost.save().then((savedDocument) => {
     console.log('Document saved successfully:', savedDocument);
+    return res.status(201).json({ message: "User created successfully" });
+
   })
     .catch((error) => {
       console.error('Error saving document:', error);
     });
-  ;
+  
+ 
 })
 /*
 app.post('/api/posts',async(req,res,next)=>{
