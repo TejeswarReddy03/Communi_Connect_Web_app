@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios'; // Import axios for HTTP requests
 import { useNavigate } from 'react-router-dom'; // Import navigate for routing
 import Login from './login';
@@ -13,6 +15,8 @@ import * as Components from '../styles/Components';
 
 function FrontpageAdmin() {
   const navigate = useNavigate();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  
   const [isSignIn, toggleSignIn] = useState(true);
   const [errorwithpincode, setError] = useState('');
   const [errorwithemail, setErroremail] = useState('');
@@ -149,7 +153,9 @@ function FrontpageAdmin() {
       }
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
   return (
     <div>
       <Components.Container >
@@ -175,12 +181,15 @@ function FrontpageAdmin() {
               {errorsigninadminid && <p>{errorsigninadminid}</p>}
 
               <Components.Input
-                type="password"
+                type={passwordVisible ? 'text' : 'password'}
                 name="password"
                 placeholder="Password"
                 onChange={handleInputChangelogin}
                 required // Make password field mandatory
               />
+               <button type="button" className="toggle-password" onClick={togglePasswordVisibility}>
+            <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+          </button>
               {errorsigninpwd && <p>{errorsigninpwd}</p>}
               <Components.Anchor href="#">Forgot your password?</Components.Anchor>
               <Components.Button type="submit">Sign In</Components.Button>
