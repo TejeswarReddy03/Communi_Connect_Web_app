@@ -14,6 +14,10 @@ import Startpage from './pages/startpage';
 import FrontpageAdmin from './pages/frontpageadmin';
 import Homepage from './Home';
 import Announcementsmultiling from './components/announcementsmultiling';
+import Poll from './components/Poll';
+import PollForm from './components/PollForm'; 
+import PollList from './components/PollList';
+
 function App() {
   return (
     <div  >
@@ -33,6 +37,9 @@ function App() {
         <Route path="/announcements" element={<Announcements />} />
         <Route path="/multilingannc" element={<Announcementsmultiling />} />
         <Route path="/homes" element={<Homepage/>}/>
+        <Route path="/polls" element={<Poll/>} />
+        <Route path="/polls/create" element={<PollForm/>} />
+        <Route path="/polllist" element={<PollList/>} />
       </Routes>
     </BrowserRouter>
     </div>

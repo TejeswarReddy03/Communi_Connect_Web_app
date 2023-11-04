@@ -32,6 +32,10 @@ import {
       title: "chats",
     },
     {
+      id: "polls",
+      title: "polls",
+    },
+    {
       id: "announcements",
       title: "announcements",
     },
