@@ -169,7 +169,7 @@ app.get('/api/announcements/lang', async (req, res) => {
     
     if (translationResult && translationResult.translation) {
       const translatedString = translationResult.translation;
-      console.log(translatedString);
+    //  console.log(translatedString);
       res.json({ announcement: translatedString });
     } else {
       console.error('Translation result is not in the expected format:', translationResult);
