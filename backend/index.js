@@ -341,6 +341,7 @@ app.post('/api/posts', async (req, res) => {
   console.log("heyy",req.body.userid);
   await NewPost.save().then((savedDocument) => {
     console.log('Document saved successfully:', savedDocument);
+    return res.status(201).json({message:"User created Succesfully"})
   })
     .catch((error) => {
       console.error('Error saving document:', error);
@@ -377,8 +378,11 @@ app.post('/api/postslike', async (req, res) => {
       post.likes = post.likes + 1;
     }
 
-    const updatedPost = await post.save();
-    res.json(updatedPost);
+     await post.save().then((updatedPost)=>{
+       res.status(201).json(updatedPost)
+    });
+    
+    // res.json(updatedPost);
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('Server error');
@@ -393,6 +397,7 @@ app.post('/api/postslike', async (req, res) => {
 
 
 app.post('/api/delete_post', async (req, res) => {
+  
   try {
     const postId = req.body.postid;
 
@@ -402,14 +407,14 @@ app.post('/api/delete_post', async (req, res) => {
 
     if (deletedPost) {
       console.log('Post deleted successfully:', deletedPost);
-      res.status(200).json({ message: 'Post deleted successfully' });
+   return res.status(201).json({ message: 'Post deleted successfully' });
     } else {
       console.error('Post not found or could not be deleted.');
-      res.status(404).json({ message: 'Post not found or could not be deleted' });
+     return res.status(404).json({ message: 'Post not found or could not be deleted' });
     }
   } catch (error) {
     console.error('Error deleting post:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+   return res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
@@ -424,14 +429,14 @@ app.post('/api/delete_comment', async (req, res) => {
 
     if (deletedComment) {
       console.log('Post deleted successfully:', deletedComment);
-      res.status(200).json({ message: 'Post deleted successfully' });
+      return res.status(201).json({ message: 'Post deleted successfully' });
     } else {
       console.error('Post not found or could not be deleted.');
-      res.status(404).json({ message: 'Post not found or could not be deleted' });
+      return res.status(404).json({ message: 'Post not found or could not be deleted' });
     }
   } catch (error) {
     console.error('Error deleting post:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
@@ -448,7 +453,7 @@ app.post('/api/comments', async (req, res) => {
   Post.findById(req.body.postid)
   .then((postt)=>{
       if(postt){
-        console.log("ihi",req.body.postid,req.body.userr,"op");
+        // console.log("ihi",req.body.postid,req.body.userr,"op");
           Comment.create({
               content : req.body.content,
               post : req.body.postid,
@@ -459,10 +464,14 @@ app.post('/api/comments', async (req, res) => {
             console.log("comment");
             postt.comments = postt.comments || [];
               postt.comments.push(comment);
-              postt.save();
+              postt.save()
+            .then((updatedPost)=>{
+                return res.status(201).json(updatedPost)
+              })
+              ;
   
 
-              res.redirect('/');
+             
           })
           .catch((err)=>{
               console.log("err",err);

@@ -9,8 +9,8 @@
     position: absolute;
     z-index: 1;
     top: 20px; 
-    left: 20px; 
+    left: 1050px; 
     display: flex;
     flex-direction: column; 
-    
+    /* background-color: black; */
   }
