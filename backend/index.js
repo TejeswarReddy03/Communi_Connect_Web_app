@@ -160,6 +160,31 @@ app.get('/api/announcements', async (req, res) => {
   }
 });
 
+app.get('/api/top-liked-posts', async (req, res) => {
+  try {
+    const topLikedPosts = await Post.aggregate([
+      {
+        $project: {
+          _id: 1,
+          likes: 1,
+          content: 1,
+          
+        },
+      },
+      {
+        $sort: { likes: -1 },
+      },
+      {
+        $limit: 3,
+      },
+    ]);
+
+    res.json(topLikedPosts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 app.get('/api/announcements/lang', async (req, res) => {
   try {
     const originalString = req.query.announcement;
@@ -838,6 +863,141 @@ app.get('/api/users/:pincode', async (req, res) => {
     console.log('Error', error)
   }
 })
+app.get('/api/data/user-count-per-week/:pincode', async (req, res) => {
+  const { pincode } = req.params;
+  try {
+    const userCountPerWeek = await User.aggregate([
+      {
+        $match: { pincode }, // Filter by the specified pincode
+      },
+      {
+        $group: {
+          _id: {
+            week: { $week: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          count: 1,
+        },
+      },
+    ]).exec();
+
+    if (userCountPerWeek.length === 0) {
+      res.json(0); // Return 0 if no data is found
+    } else {
+      res.json(userCountPerWeek[0].count);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/api/data/post-count-per-week', async (req, res) => {
+  try {
+    const postCountPerWeek = await Post.aggregate([
+      {
+        $group: {
+          _id: {
+            week: { $week: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          count: 1,
+        },
+      },
+    ]).exec();
+
+    if (postCountPerWeek.length === 0) {
+      res.json(0); // Return 0 if no data is found
+    } else {
+      res.json(postCountPerWeek[0].count);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/api/data/announcement-count-per-week/:pincode', async (req, res) => {
+  const { pincode } = req.params;
+  try {
+    const announcementCountPerWeek = await Announcements.aggregate([
+      {
+        $match: { pincode }, // Filter by the specified pincode
+      },
+      {
+        $group: {
+          _id: {
+            week: { $week: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          count: 1,
+        },
+      },
+    ]).exec();
+
+    if (announcementCountPerWeek.length === 0) {
+      res.json(0); // Return 0 if no data is found
+    } else {
+      res.json(announcementCountPerWeek[0].count);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/api/data/marker-count-per-week/:pincode', async (req, res) => {
+  const { pincode } = req.params;
+  try {
+    const markerCountPerWeek = await Markers.aggregate([
+      {
+        $match: { pincode }, // Filter by the specified pincode
+      },
+      {
+        $group: {
+          _id: {
+            week: { $week: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          count: 1,
+        },
+      },
+    ]).exec();
+
+    if (markerCountPerWeek.length === 0) {
+      res.json(0); // Return 0 if no data is found
+    } else {
+      res.json(markerCountPerWeek[0].count);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 app.get("/signout", usersController.destroySession);
 

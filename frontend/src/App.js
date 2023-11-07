@@ -15,6 +15,7 @@ import FrontpageAdmin from './pages/frontpageadmin';
 import Homepage from './Home';
 import Editprofile from './components/editprofile'
 import Announcementsmultiling from './components/announcementsmultiling';
+import WeeklyAnalysisChart from './components/weeklyanalysis';
 function App() {
   return (
     <div  >
@@ -33,6 +34,7 @@ function App() {
         <Route path="/posts" element={<Posts />} />
         <Route path="/announcements" element={<Announcements />} />
         <Route path="/multilingannc" element={<Announcementsmultiling />} />
+        <Route path="/weeklyanalysis" element={<WeeklyAnalysisChart />} />
         <Route path="/homes" element={<Homepage/>}/>
         <Route path="/editprofile" element={<Editprofile/>}/>
       </Routes>
