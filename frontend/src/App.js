@@ -13,6 +13,7 @@ import Frontpage from './pages/frontpage';
 import Startpage from './pages/startpage';
 import FrontpageAdmin from './pages/frontpageadmin';
 import Homepage from './Home';
+import Editprofile from './components/editprofile'
 import Announcementsmultiling from './components/announcementsmultiling';
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/announcements" element={<Announcements />} />
         <Route path="/multilingannc" element={<Announcementsmultiling />} />
         <Route path="/homes" element={<Homepage/>}/>
+        <Route path="/editprofile" element={<Editprofile/>}/>
       </Routes>
     </BrowserRouter>
     </div>

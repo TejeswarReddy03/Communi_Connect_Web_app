@@ -29,7 +29,7 @@ function Login() {
       const response = await axios.post("http://localhost:8004/create-session", formData); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
      navigate('/home', { state: { userData: response.data } });
-
+      console.log("heyyyyyy");
     } catch (error) {
       console.error("Registration failed", error);
     }

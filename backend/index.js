@@ -421,6 +421,33 @@ app.post('/api/delete_post', async (req, res) => {
   }
 });
 
+app.post('/api/updateUserProfile', async (req, res) => {
+  const updatedUserData = req.body;
+  const userEmail = updatedUserData.email;
+  console.log(updatedUserData.username);
+  try {
+    // Find the user in the database by email
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+    } else {
+      // Update the user's data
+      user.name = updatedUserData.username;
+      user.password = updatedUserData.password;
+      user.pincode = updatedUserData.pincode;
+
+
+      // Save the updated user in the database
+      await user.save();
+
+      res.status(201).json({ message: 'User profile updated successfully',user  });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating user profile', error });
+  }
+});
+
 
 app.post('/api/delete_comment', async (req, res) => {
   try {

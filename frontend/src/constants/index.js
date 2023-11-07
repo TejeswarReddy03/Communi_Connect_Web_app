@@ -51,7 +51,11 @@ import {
     {
       id: "multilingannc",
       title:"multilingannc"
-    }
+    },
+    {
+      id: "editprofile",
+      title:"editprofile"
+    },
 
   ];
   

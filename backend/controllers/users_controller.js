@@ -32,7 +32,7 @@ const pincodeofuser=req.user.pincode;
 const nameofuser = req.user.name;
 const idofuser = req.user.id;
 const isitadmin=req.user.isAdmin;
-const jsonData = { authstatus:1 ,email:emailofuser,pincode:pincodeofuser,name:nameofuser,id:idofuser,isAdmin:isitadmin};
+const jsonData = { authstatus:1 ,email:emailofuser,password:req.user.password,pincode:pincodeofuser,name:nameofuser,id:idofuser,isAdmin:isitadmin};
 // // Encode the JSON object as a query parameter
  const jsonDataEncoded = encodeURIComponent(JSON.stringify(jsonData));
 
