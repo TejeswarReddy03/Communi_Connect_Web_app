@@ -30,7 +30,11 @@ import {
     {
       id: "polls",
       title: "polls",
-    } 
+    },
+    {
+      id: "weeklyanalysis",
+      title: "weeklyanalysis",
+    }  
   ]
   export const navLinks = [
     {
