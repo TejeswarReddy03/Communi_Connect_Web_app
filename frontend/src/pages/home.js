@@ -51,6 +51,7 @@ function Home() {
         <button onClick={handlelogout}>logout</button>
         <button onClick={()=>handleclick("viewmarkers")}>viewmarkers</button>
         <button onClick={()=>handleclick("homes")}>home</button>
+        <button onClick={()=>handleclick("editprofie")}>editprofile</button>
       </div>
     )
   );

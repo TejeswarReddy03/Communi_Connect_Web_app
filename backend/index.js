@@ -205,6 +205,31 @@ app.get('/api/announcements', async (req, res) => {
   }
 });
 
+app.get('/api/top-liked-posts', async (req, res) => {
+  try {
+    const topLikedPosts = await Post.aggregate([
+      {
+        $project: {
+          _id: 1,
+          likes: 1,
+          content: 1,
+          
+        },
+      },
+      {
+        $sort: { likes: -1 },
+      },
+      {
+        $limit: 3,
+      },
+    ]);
+
+    res.json(topLikedPosts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 app.get('/api/announcements/lang', async (req, res) => {
   try {
     const originalString = req.query.announcement;
@@ -215,7 +240,7 @@ app.get('/api/announcements/lang', async (req, res) => {
     
     if (translationResult && translationResult.translation) {
       const translatedString = translationResult.translation;
-      console.log(translatedString);
+    //  console.log(translatedString);
       res.json({ announcement: translatedString });
     } else {
       console.error('Translation result is not in the expected format:', translationResult);
@@ -386,12 +411,15 @@ app.post('/api/posts', async (req, res) => {
   console.log("heyy",req.body.userid);
   await NewPost.save().then((savedDocument) => {
     console.log('Document saved successfully:', savedDocument);
-    return res.status(201).json({message:"User created Succesfully"})
+
+    return res.status(201).json({ message: "User created successfully" });
+
   })
     .catch((error) => {
       console.error('Error saving document:', error);
     });
-  ;
+  
+ 
 })
 
 app.post('/api/postslike', async (req, res) => {
@@ -460,6 +488,33 @@ app.post('/api/delete_post', async (req, res) => {
   } catch (error) {
     console.error('Error deleting post:', error);
    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+app.post('/api/updateUserProfile', async (req, res) => {
+  const updatedUserData = req.body;
+  const userEmail = updatedUserData.email;
+  console.log(updatedUserData.username);
+  try {
+    // Find the user in the database by email
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+    } else {
+      // Update the user's data
+      user.name = updatedUserData.username;
+      user.password = updatedUserData.password;
+      user.pincode = updatedUserData.pincode;
+
+
+      // Save the updated user in the database
+      await user.save();
+
+      res.status(201).json({ message: 'User profile updated successfully',user  });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating user profile', error });
   }
 });
 
@@ -853,6 +908,141 @@ app.get('/api/users/:pincode', async (req, res) => {
     console.log('Error', error)
   }
 })
+app.get('/api/data/user-count-per-week/:pincode', async (req, res) => {
+  const { pincode } = req.params;
+  try {
+    const userCountPerWeek = await User.aggregate([
+      {
+        $match: { pincode }, // Filter by the specified pincode
+      },
+      {
+        $group: {
+          _id: {
+            week: { $week: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          count: 1,
+        },
+      },
+    ]).exec();
+
+    if (userCountPerWeek.length === 0) {
+      res.json(0); // Return 0 if no data is found
+    } else {
+      res.json(userCountPerWeek[0].count);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/api/data/post-count-per-week', async (req, res) => {
+  try {
+    const postCountPerWeek = await Post.aggregate([
+      {
+        $group: {
+          _id: {
+            week: { $week: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          count: 1,
+        },
+      },
+    ]).exec();
+
+    if (postCountPerWeek.length === 0) {
+      res.json(0); // Return 0 if no data is found
+    } else {
+      res.json(postCountPerWeek[0].count);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/api/data/announcement-count-per-week/:pincode', async (req, res) => {
+  const { pincode } = req.params;
+  try {
+    const announcementCountPerWeek = await Announcements.aggregate([
+      {
+        $match: { pincode }, // Filter by the specified pincode
+      },
+      {
+        $group: {
+          _id: {
+            week: { $week: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          count: 1,
+        },
+      },
+    ]).exec();
+
+    if (announcementCountPerWeek.length === 0) {
+      res.json(0); // Return 0 if no data is found
+    } else {
+      res.json(announcementCountPerWeek[0].count);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/api/data/marker-count-per-week/:pincode', async (req, res) => {
+  const { pincode } = req.params;
+  try {
+    const markerCountPerWeek = await Markers.aggregate([
+      {
+        $match: { pincode }, // Filter by the specified pincode
+      },
+      {
+        $group: {
+          _id: {
+            week: { $week: '$createdAt' },
+            year: { $year: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          count: 1,
+        },
+      },
+    ]).exec();
+
+    if (markerCountPerWeek.length === 0) {
+      res.json(0); // Return 0 if no data is found
+    } else {
+      res.json(markerCountPerWeek[0].count);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 app.get("/signout", usersController.destroySession);
 

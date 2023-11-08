@@ -66,6 +66,7 @@ console.log("in handle submit")
         try {
           setisformUploading(true);
            console.log("yes");
+           setisformUploading(true);
           const data=new FormData();
           data.append("file",image);
           data.append("upload_preset","cloggxrh");
@@ -79,14 +80,15 @@ console.log("in handle submit")
           .then(data=>{
             setImage(data.url.toString());
            
-            console.log("heyy image url is ",data.url.toString(),userData.id);
-           axios.post("http://localhost:8004/api/posts",{ username:user_name,content:contents,avatar:data.url.toString(),userid:userData.id
+
+            console.log("heyy image url is ",data.url.toString());
+         axios.post("http://localhost:8004/api/posts",{ username:user_name,content:contents,avatar:data.url.toString()
            
           })
           .then(response=>{
-          console.log("in then");
-             setisformUploading(false);
-            // setShouldFetch(true);
+            console.log("in the then of posttoapi")
+           // setisformUploading(true);
+            setisformUploading(false);
 
           })
           ;
@@ -104,9 +106,11 @@ console.log("in handle submit")
         }
       }
         
+
         await posttoapi();
         
         // setShouldFetch(true);
+
 
     } 
 
