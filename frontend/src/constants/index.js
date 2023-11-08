@@ -25,12 +25,19 @@ import {
     threejs,
     markonmap,
   } from "../assets";
-  
+  export const VerticalLinks=[
+   
+    {
+      id: "polls",
+      title: "polls",
+    } 
+  ]
   export const navLinks = [
     {
       id: "chats",
       title: "chats",
     },
+   
     {
       id: "announcements",
       title: "announcements",

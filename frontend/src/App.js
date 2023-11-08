@@ -15,6 +15,9 @@ import FrontpageAdmin from './pages/frontpageadmin';
 import Homepage from './Home';
 import Editprofile from './components/editprofile'
 import Announcementsmultiling from './components/announcementsmultiling';
+import Poll from './components/Poll';
+import PollForm from './components/PollForm'; 
+import PollList from './components/PollList';
 import WeeklyAnalysisChart from './components/weeklyanalysis';
 function App() {
   return (
@@ -36,7 +39,11 @@ function App() {
         <Route path="/multilingannc" element={<Announcementsmultiling />} />
         <Route path="/weeklyanalysis" element={<WeeklyAnalysisChart />} />
         <Route path="/homes" element={<Homepage/>}/>
+
+        <Route path="/polls" element={<Poll/>} />
+     
         <Route path="/editprofile" element={<Editprofile/>}/>
+
       </Routes>
     </BrowserRouter>
     </div>
