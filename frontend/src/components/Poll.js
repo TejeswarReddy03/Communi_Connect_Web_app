@@ -1,82 +1,106 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState,useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import PollForm from './PollForm'; // Assuming you have PollForm component in a separate file
 
 function Poll() {
-   
-  const [question, setQuestion] = useState('');
-  const [options, setOptions] = useState([]);
-  const [polls, setPolls] = useState([]);
-  const [showAddPollForm, setShowAddPollForm] = useState(false);
+  const [googleFormURL, setGoogleFormURL] = useState('');
+  const [googleurluser,setGoogleurluser]=useState('');
+  const [noformmsg,setNoformmsg]=useState('');
+
+  
+  const location = useLocation();
+  const userstate = location.state;
+  const userdata = userstate.userData;
+  const userIsAdmin = userdata.isAdmin;
+  const handleURLChange = (e) => {
+    setGoogleFormURL(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    // Make an Axios POST request to save the Google Form URL to the database
+    axios
+      .post('http://localhost:8004/api/save-google-form', {
+        formLink: googleFormURL,
+        pincode:userdata.pincode
+      })
+      .then((response) => {
+        // Handle the response if needed
+        console.log('Google Form URL saved:', response.data);
+      })
+      .catch((error) => {
+        // Handle errors if the request fails
+        console.error('Error saving Google Form URL:', error);
+      });
+  };
+  const fetchRecentOpenPoll = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8004/api/fetch-recent-open-poll/${userdata.pincode}`);
+      const recentPoll = response.data;
+console.log(recentPoll);
+      if (recentPoll) {
+        setGoogleurluser(recentPoll.formLink);
+      } else {
+        console.log('No recent open poll found for the user.');
+        
+        setNoformmsg('No polls currently in your pincode area');
+      }
+    } catch (error) {
+      console.error('Error fetching the recent open poll:', error);
+    }
+  };
 
   useEffect(() => {
-    axios.get('http://localhost:8004/api/polls').then((response) => {
-      setPolls(response.data);
-    });
+    if (!userIsAdmin) {
+      //console.log("fething")
+      fetchRecentOpenPoll();
+    }
   }, []);
-
-  const handleCreatePoll = () => {
-    axios.post('http://localhost:8004/api/polls', { question, options }).then((response) => {
-      setPolls([...polls, response.data]);
-      setQuestion(''); // Clear the question input
-      setOptions([]);  // Clear the options array
-    });
-  };
-
-  const handleVote = (pollId, optionId) => {
-    axios.post(`http://localhost:8004/api/polls/${pollId}/vote`, { optionId }).then((response) => {
-      const updatedPolls = polls.map((p) => (p._id === pollId ? response.data : p));
-      setPolls(updatedPolls);
-    });
-  };
-
-  const handleAddPollClick = () => {
-    setShowAddPollForm(true);
-  };
-  console.log("in the poll component")
+  console.log("user google url",googleurluser);
   return (
-    <div className="poll-container" style={{ background: 'black', padding: '20px' }}>
-      <h2>Polls</h2>
-      <button onClick={handleAddPollClick}>Add Poll</button>
-      {showAddPollForm && <PollForm />}
-
-      {/* <input
-        type="text"
-        placeholder="Poll Question"
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
-      /> */}
-      {options.map((option, index) => (
-        <div key={index}>
+    <div>
+      {userIsAdmin ? (
+        <div>
           <input
             type="text"
-            placeholder={`Option ${index + 1}`}
-            value={option}
-            onChange={(e) => {
-              const updatedOptions = [...options];
-              updatedOptions[index] = e.target.value;
-              setOptions(updatedOptions);
-            }}
+            placeholder="Enter Google Form URL"
+            value={googleFormURL}
+            onChange={handleURLChange}
           />
+          <button onClick={handleSubmit}>Submit</button>
+          <iframe
+            title="Google Form Poll"
+            src={googleFormURL}
+            width="100%"
+            height="600"
+            frameBorder="0"
+            marginHeight="0"
+            marginWidth="0"
+          >
+            Loading...
+          </iframe>
         </div>
-      ))}
-      {/* <button onClick={handleCreatePoll}>Create Poll</button> */}
-
-      <div>
-        {polls.map((poll) => (
-          <div key={poll._id}>
-            <h3>{poll.question}</h3>
-            {poll.options.map((option, index) => (
-              <div key={index}>
-                {option.text}
-                <button onClick={() => handleVote(poll._id, index)}>Vote</button>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+      ) : (
+        <div>
+          {googleurluser ? (
+            <iframe
+              title="Google Form Poll"
+              src={googleurluser}
+              width="100%"
+              height="600"
+              frameBorder="0"
+              marginHeight="0"
+              marginWidth="0"
+            >
+              Loading...
+            </iframe>
+          ) : (
+            <p>No recent polls conducted in your pincode area</p>
+          )}
+        </div>
+      )}
     </div>
   );
+  
 }
 
 export default Poll;

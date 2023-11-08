@@ -1,11 +1,23 @@
-// polls.js
 const mongoose = require('mongoose');
 
-const pollSchema = new mongoose.Schema({
-    question: String,
-    options: [{ text: String, votes: Number }],
-    
+const Pollsschema = new mongoose.Schema({
+  formLink: {
+    type: String,
+    required: true,
+  },
+  pincode: {
+    type: String,
+    required: true,
+  },
+  
+  isClosed: {
+    type: Boolean,
+    default: false,
+  },
+},{
+    timestamps:true
 });
 
-const Poll = mongoose.model('Poll', pollSchema);
-module.exports = Poll;
+const Polls = mongoose.model('Polls', Pollsschema);
+
+module.exports = Polls;

@@ -70,45 +70,49 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-app.get('/api/polls', async (req, res) => {
+app.get('/api/fetch-recent-open-poll/:userPincode', async (req, res) => {
+  const { userPincode } = req.params;
+
   try {
-      const polls = await Poll.find();
-      res.json(polls);
+    // Query the database to find the most recently created open poll that matches the user's pincode
+    const recentPoll = await Poll.findOne({
+      pincode: userPincode,
+      isClosed: false,
+    })
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order (most recent first)
+      .exec();
+
+    if (recentPoll) {
+      res.status(200).json(recentPoll);
+    } else {
+      res.status(200).json({ message: 'No recent open poll found for the user.' });
+    }
   } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch polls' });
+    console.error('Error fetching the recent open poll:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.post('/api/polls', async (req, res) => {
-  try {
-    console.log(req.body);
-      const { question, options } = req.body;
-      const newPoll = new Poll({ question, options });
-      await newPoll.save();
-      res.json(newPoll);
-  } catch (error) {
-      res.status(400).json({ error: 'Failed to create a poll' });
-  }
-});
 
-app.post('/api/polls/:id/vote', async (req, res) => {
-  try {
-      const pollId = req.params.id;
-      const { optionId } = req.body;
+app.post('/api/save-google-form',async(req,res)=>{
+try {
+  // Extract the formLink from the request body
+  const { formLink ,pincode} = req.body;
 
-      const poll = await Poll.findById(pollId);
-      if (!poll) {
-          res.status(404).json({ error: 'Poll not found' });
-      } else if (optionId < 0 || optionId >= poll.options.length) {
-          res.status(400).json({ error: 'Invalid option' });
-      } else {
-          poll.options[optionId].votes++;
-          await poll.save();
-          res.json(poll);
-      }
-  } catch (error) {
-      res.status(500).json({ error: 'Failed to vote on the poll' });
-  }
+  // Create a new GoogleForm document and save it to the database
+  const newForm = new Poll({
+    formLink,
+    pincode
+  });
+
+  const savedForm = await newForm.save();
+
+  res.status(201).json(savedForm);
+} catch (error) {
+  console.error('Error saving Google Form URL:', error);
+  res.status(500).json({ error: 'Internal server error' });
+}
+
 });
 app.get('/announcements/after/:date', async (req, res) => {
   const { date } = req.params;
