@@ -320,7 +320,7 @@ app.get('/api/comments', async (req, res) => {
 });
 */
 
-app.get('/api/posts', async (req, res) => {
+app.get('/api/posts',passport.checkAuthentication, async (req, res) => {
   try {
     console.log("posts called");
     
@@ -352,7 +352,7 @@ app.get('/api/posts', async (req, res) => {
 // });
 //const upload = multer({storage:storage});
 
-app.post('/api/posts', async (req, res) => {
+app.post('/api/posts',passport.checkAuthentication, async (req, res) => {
 
   
   const NewPost = new Post({
@@ -570,7 +570,7 @@ app.post('/api/posts',async(req,res,next)=>{
 
 
 
-app.get('/data', (req, res) => {
+app.get('/data',passport.checkAuthentication, (req, res) => {
   const data = { key: 'valueees' };
   res.json(data);
 });

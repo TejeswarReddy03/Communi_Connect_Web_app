@@ -17,10 +17,12 @@ import Editprofile from './components/editprofile'
 import Announcementsmultiling from './components/announcementsmultiling';
 import WeeklyAnalysisChart from './components/weeklyanalysis';
 function App() {
+  const isLoggedIn = localStorage.getItem('loggedIn')
   return (
-    <div  >
+    <div>
     <BrowserRouter>
       <Routes>
+        {!isLoggedIn && <Route path='/*' element={<Login/>}></Route>}``
         {/* <Route  index element={<Home/>}/> */}
         <Route index element ={<Startpage />} />
         <Route path='/frontpage_user'  element={< Frontpage/>} />

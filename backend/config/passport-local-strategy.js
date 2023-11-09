@@ -52,10 +52,10 @@ passport.deserializeUser(function(id,done){
 passport.checkAuthentication = function(req,res,next){
     console.log("in check authentication")
     if(req.isAuthenticated()){
-    
+        console.log("not authenticated")
         return next();
     }
-    return res.redirect('/users/sign-in');
+    res.status(302).header('Location', '/').end();
 }
 passport.setAuthenticatedUser = function(req,res,next){
  // console.log("in set authenticated user",req.user);

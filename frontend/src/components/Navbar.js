@@ -28,6 +28,7 @@ const Navbar = () => {
      
     const res=  await axios.get("http://localhost:8004/destroy-session"); 
       console.log(res.data);
+     localStorage.removeItem('loggedIn')
       navigate('/');
      
     
