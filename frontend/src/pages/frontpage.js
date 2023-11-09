@@ -133,7 +133,7 @@ function Frontpage() {
             <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
           </button>
               {errorloginuser&&<p>{errorloginuser}</p>}
-              <Components.Anchor href="#">Forgot your password?</Components.Anchor>
+            
               <Components.Button type="submit">Sign In</Components.Button>
             </Components.Form>
           </Components.SignInContainer>

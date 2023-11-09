@@ -191,7 +191,7 @@ function FrontpageAdmin() {
             <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
           </button>
               {errorsigninpwd && <p>{errorsigninpwd}</p>}
-              <Components.Anchor href="#">Forgot your password?</Components.Anchor>
+            
               <Components.Button type="submit">Sign In</Components.Button>
             </Components.Form>
           </Components.SignInContainer>
