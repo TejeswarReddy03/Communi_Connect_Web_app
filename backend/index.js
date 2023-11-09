@@ -34,6 +34,7 @@ const Announcements = require("./models/announcements");
 const Post = require("./models/posts");
 const Comment = require("./models/comment")
 const Markers = require("./models/maps");
+const Poll=require('./models/polls');
 const Conversations = require('./models/conversation');
 const Messages = require('./models/messages');
 const dotenv = require('dotenv'); // Load dotenv package
@@ -69,6 +70,50 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+app.get('/api/fetch-recent-open-poll/:userPincode', async (req, res) => {
+  const { userPincode } = req.params;
+
+  try {
+    // Query the database to find the most recently created open poll that matches the user's pincode
+    const recentPoll = await Poll.findOne({
+      pincode: userPincode,
+      isClosed: false,
+    })
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order (most recent first)
+      .exec();
+
+    if (recentPoll) {
+      res.status(200).json(recentPoll);
+    } else {
+      res.status(200).json({ message: 'No recent open poll found for the user.' });
+    }
+  } catch (error) {
+    console.error('Error fetching the recent open poll:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+app.post('/api/save-google-form',async(req,res)=>{
+try {
+  // Extract the formLink from the request body
+  const { formLink ,pincode} = req.body;
+
+  // Create a new GoogleForm document and save it to the database
+  const newForm = new Poll({
+    formLink,
+    pincode
+  });
+
+  const savedForm = await newForm.save();
+
+  res.status(201).json(savedForm);
+} catch (error) {
+  console.error('Error saving Google Form URL:', error);
+  res.status(500).json({ error: 'Internal server error' });
+}
+
+});
 app.get('/announcements/after/:date', async (req, res) => {
   const { date } = req.params;
   console.log(date);
