@@ -110,6 +110,14 @@ const Navbar = () => {
           <Button
             variant="outline-light"
             className="text-[18px] font-medium cursor-pointer"
+            onClick={() => handleclick('weeklyanalysis')}
+          >
+            WeeklyAnalysis
+          </Button>
+
+          <Button
+            variant="outline-light"
+            className="text-[18px] font-medium cursor-pointer"
             onClick={() => setShowProfileNavbar(!showProfileNavbar)}
           >
             Profile
@@ -179,18 +187,6 @@ const Navbar = () => {
 
                 <Nav.Link
                   onClick={() => {
-                    handleclick('weeklyanalysis');
-                    setShowAnnouncementsNavbar(false);
-                  }}
-                  className={`${
-                    active === 'weeklyanalysis' ? 'text-white' : 'text-secondary'
-                  } hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
-                >
-                  WeeklyAnalysis
-                </Nav.Link>
-
-                <Nav.Link
-                  onClick={() => {
                     setShowAnnouncementsNavbar(false);
                   }}
                   className="text-white text-[18px] font-medium cursor-pointer"
@@ -235,7 +231,7 @@ const Navbar = () => {
                     active === 'maps' ? 'text-white' : 'text-secondary'
                   } hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
                 >
-                  Maps
+                  AddMarkers
                 </Nav.Link>
 
                 <Nav.Link
