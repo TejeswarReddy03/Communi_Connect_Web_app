@@ -88,6 +88,8 @@ function FrontpageAdmin() {
       const adminCheckResponse = await axios.get(`http://localhost:8004/check-adminID?adminID=${adminIDToCheck}&adminemail=${adminemail}`);
       const response = await axios.post("http://localhost:8004/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
+      localStorage.setItem("userDataa", JSON.stringify(response.data));
+
       setErrorsigninadminid('');
       setErrorsigninemail('');
       setErrorsigninpwd('');

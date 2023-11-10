@@ -27,8 +27,16 @@ function Login() {
     try {
       // Make an HTTP POST request to your backend server
       const response = await axios.post("http://localhost:8004/create-session", formData); // Replace "/api/register" with your backend endpoint
-      console.log("Registration successful and this is the data of user", response.data);
-     navigate('/home', { state: { userData: response.data } });
+      console.log("Registration2 successful and this is the data of user", response.data);
+      console.log("above if")
+      // Store the user data in local storage.
+      if(response.data){
+      localStorage.setItem("beel", "true");
+        console.log("inside if")
+      }
+// Retrieve the user data from local storage.
+
+      //navigate('/home', { state: { userData: response.data } });
       console.log("heyyyyyy");
     } catch (error) {
       console.error("Registration failed", error);

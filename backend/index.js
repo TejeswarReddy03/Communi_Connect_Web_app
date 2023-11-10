@@ -364,10 +364,10 @@ app.get('/api/comments', async (req, res) => {
   }
 });
 */
-
 app.get('/api/posts', async (req, res) => {
   try {
     console.log("posts called");
+    pincode=req.body.userPincode;
     
     const posts = await Post.find({});
 
@@ -615,7 +615,7 @@ app.post('/api/posts',async(req,res,next)=>{
 
 
 
-app.get('/data', (req, res) => {
+app.get('/data',(req, res) => {
   const data = { key: 'valueees' };
   res.json(data);
 });

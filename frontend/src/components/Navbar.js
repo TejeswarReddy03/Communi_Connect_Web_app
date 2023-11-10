@@ -5,6 +5,7 @@ import { navLinks } from '../constants';
 import { useLocation } from 'react-router-dom';
 import { logo, menu, close } from '../assets';
 import { useNavigate } from 'react-router-dom';
+import {BroadcastChannel} from 'broadcast-channel'
 import { Button, Navbar as BootstrapNavbar, Nav } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -22,8 +23,10 @@ const Navbar = () => {
     event.preventDefault();
 
     try {
-      const res = await axios.get('http://localhost:8004/destroy-session');
+      const res = await axios.get("http://localhost:8004/destroy-session");
+      localStorage.removeItem('userDataa');
       console.log(res.data);
+     localStorage.removeItem('loggedIn')
       navigate('/');
     } catch (error) {
       console.error('logout failed', error);

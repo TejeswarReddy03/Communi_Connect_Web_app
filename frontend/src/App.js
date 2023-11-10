@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter ,Route,Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter ,Route,Routes,Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/login';
 import Signup from './pages/signup';
@@ -19,33 +19,57 @@ import Poll from './components/Poll';
 import PollForm from './components/PollForm'; 
 import PollList from './components/PollList';
 import WeeklyAnalysisChart from './components/weeklyanalysis';
-function App() {
-  return (
-    <div  >
-    <BrowserRouter>
-      <Routes>
-        {/* <Route  index element={<Home/>}/> */}
-        <Route index element ={<Startpage />} />
-        <Route path='/frontpage_user'  element={< Frontpage/>} />
-        <Route path='/frontpage_admin'  element={< FrontpageAdmin/>} />
-        <Route path="/signup" element={<Signup />} />
-        {/* <Route path="/login" element={<Login />} /> */}
-        <Route path= "/home" element={<Homepage />} />
-        <Route path="/chats" element={<Chats />} />
-        <Route path="/maps" element={<Maps />} />
-        <Route path="/viewmarkers" element={<Viewmarkers />} />
-        <Route path="/posts" element={<Posts />} />
-        <Route path="/announcements" element={<Announcements />} />
-        <Route path="/multilingannc" element={<Announcementsmultiling />} />
-        <Route path="/weeklyanalysis" element={<WeeklyAnalysisChart />} />
-        <Route path="/homes" element={<Homepage/>}/>
+import { useLocation } from 'react-router-dom';
+// import {logoutAlltabs} from './components/Navbar'
 
-        <Route path="/polls" element={<Poll/>} />
+function App() {
+  // const isLoggedIn = localStorage.getItem('loggedIn')
+
+  // useEffect(()=>{
+  //   logoutAlltabs()
+  // },[]);
+    
+  
+
+  const location = useLocation();
+  const userState = location.state;
+  const userDataa = userState ? userState.userData : null;
+  const userData2 = (localStorage.getItem('userDataa'));
+
+  console.log("userData",userData2);
+  console.log("userData2",userData2);
+
+  return (
+    <div>
+    
+
+      <Routes>
+ 
+      {(!userData2) && <Route path="/*" element={<Frontpage/>}/>}
+        {/* <Route  index element={<Home/>}/> */}
+        
+        {<Route index element ={<Startpage />} />}
+        {!userData2&&<Route path='/frontpage_user'  element={< Frontpage/>} />}
+        {!userData2&&<Route path='/frontpage_admin'  element={< FrontpageAdmin/>} />}
+        {userData2&&<Route path="/signup" element={<Signup />} />}
+        {/* <Route path="/login" element={<Login />} /> */}
+        {userData2&&<Route path= "/home" element={<Homepage />} />}
+        {userData2&&<Route path="/chats" element={<Chats />} />}
+        {userData2&&<Route path="/maps" element={<Maps />} />}
+        {userData2&&<Route path="/viewmarkers" element={<Viewmarkers />} />}
+        {userData2&&<Route path="/posts" element={<Posts />} />}
+        
+        {userData2&&<Route path="/announcements" element={<Announcements />} />}
+        {userData2&&<Route path="/multilingannc" element={<Announcementsmultiling />} />}
+        {userData2&&<Route path="/weeklyanalysis" element={<WeeklyAnalysisChart />} />}
+        {userData2&&<Route path="/homes" element={<Homepage/>}/>}
+
+        {userData2&&<Route path="/polls" element={<Poll/>} />}
      
-        <Route path="/editprofile" element={<Editprofile/>}/>
+        {userData2&&<Route path="/editprofile" element={<Editprofile/>}/>}
 
       </Routes>
-    </BrowserRouter>
+   
     </div>
     
     

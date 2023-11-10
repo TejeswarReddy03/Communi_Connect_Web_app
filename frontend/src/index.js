@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './utils/globalStyles.css';
+import {BrowserRouter as Router} from 'react-router-dom';
 
 import './index.css'
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -15,7 +16,9 @@ library.add(fas);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <Router>
     <App />
+    </Router>
   </React.StrictMode>
 );
 

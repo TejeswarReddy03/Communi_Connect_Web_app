@@ -27,6 +27,8 @@ function Home() {
      
     const res=  await axios.get("http://localhost:8004/destroy-session"); 
       console.log(res.data);
+      console.log("removing item")
+      localStorage.removeItem('userDataa')
       navigate('/');
      
     
