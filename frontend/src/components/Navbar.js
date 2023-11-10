@@ -11,10 +11,10 @@ import axios from 'axios';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const userstate = location.state;
-  const userdata = userstate.userData;
-
+  // const location = useLocation();
+  // const userstate = location.state;
+  // const userdata = userstate.userData;
+  const userdata = localStorage.getItem('userDataa');
   const handleclick = (i) => {
     navigate(`/${i}`, { state: { userData: userdata } });
   };
@@ -48,7 +48,7 @@ const Navbar = () => {
         <div className="w-full flex justify-between items-center max-w-7xl mx-auto">
 
           <Link
-            to="/"
+            to="/home"
             className="flex items-center gap-2"
             onClick={() => {
               setActive('');

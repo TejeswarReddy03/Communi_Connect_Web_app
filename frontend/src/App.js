@@ -49,8 +49,8 @@ function App() {
         {/* <Route  index element={<Home/>}/> */}
         
         {<Route index element ={<Startpage />} />}
-        {!userData2&&<Route path='/frontpage_user'  element={< Frontpage/>} />}
-        {!userData2&&<Route path='/frontpage_admin'  element={< FrontpageAdmin/>} />}
+        {<Route path='/frontpage_user'  element={< Frontpage/>} />}
+        {<Route path='/frontpage_admin'  element={< FrontpageAdmin/>} />}
         {userData2&&<Route path="/signup" element={<Signup />} />}
         {/* <Route path="/login" element={<Login />} /> */}
         {userData2&&<Route path= "/home" element={<Homepage />} />}
