@@ -365,7 +365,7 @@ app.get('/api/comments', async (req, res) => {
 });
 */
 
-app.get('/api/posts',passport.checkAuthentication, async (req, res) => {
+app.get('/api/posts', async (req, res) => {
   try {
     console.log("posts called");
     

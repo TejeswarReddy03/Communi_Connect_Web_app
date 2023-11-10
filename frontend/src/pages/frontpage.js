@@ -61,7 +61,7 @@ function Frontpage() {
       const response = await axios.post("http://localhost:8004/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
       setErrorloginuser('');
-      
+      localStorage.setItem("userDataa", "true");
      navigate('/home', { state: { userData: response.data} });
 
 

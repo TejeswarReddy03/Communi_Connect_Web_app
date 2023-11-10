@@ -411,4 +411,4 @@ function ShowAnnouncements({annData,setShouldFetch,setisformUploading}) {
   );
 }
 
-export default Posts;
+export default Posts ;

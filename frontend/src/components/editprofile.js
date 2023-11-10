@@ -45,7 +45,7 @@ function Editprofile() {
   
       // Make a logout request and wait for it to complete
       await axios.get("http://localhost:8004/destroy-session");
-  
+      localStorage.removeItem('userDataa');
       // Now navigate to the desired page
       navigate('/');
     } catch (error) {

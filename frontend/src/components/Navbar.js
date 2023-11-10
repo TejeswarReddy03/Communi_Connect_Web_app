@@ -6,6 +6,7 @@ import { VerticalLinks } from '../constants';
 import { logo, menu, close } from '../assets';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import {BroadcastChannel} from 'broadcast-channel'
 import axios from 'axios';
 
 const VerticalNavbar = ({ VerticalLinks, active, handleclick, isVisible }) => {
@@ -51,6 +52,7 @@ const Navbar = () => {
 
     try {
       const res = await axios.get("http://localhost:8004/destroy-session");
+      localStorage.removeItem('userDataa');
       console.log(res.data);
      localStorage.removeItem('loggedIn')
       navigate('/');
