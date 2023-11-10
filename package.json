@@ -1,0 +1,16 @@
+{
+  "name": "communi_connect_web_app---copy",
+  "version": "1.0.0",
+  "description": "The Communi Connect Web App is a platform designed to address and resolve ongoing community problems by harnessing the collective input and concerns of community members. Its primary purpose is to facilitate efficient communication between community members and authorities, ultimately leading to actionable solutions and improved community well-being.",
+  "main": "index.js",
+  "scripts": {
+    "install-server": "cd backend && npm install",
+    "start-server": "cd backend && node app.js",
+    "install-client": "cd frontend && npm install",
+    "build-client": "cd frontend && npm run build",
+    "start-client": "cd frontend && npm run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
