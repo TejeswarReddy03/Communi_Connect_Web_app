@@ -45,7 +45,7 @@ function App() {
 
       <Routes>
  
-      {/*(!userData2) && <Route path="/*" element={<Frontpage/>}/>*/}
+      {(!userData2) && <Route path="/*" element={<Frontpage/>}/>}
         {/* <Route  index element={<Home/>}/> */}
         
         {<Route index element ={<Startpage />} />}
