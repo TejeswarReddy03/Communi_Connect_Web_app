@@ -11,9 +11,7 @@ import axios from 'axios';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const userstate = location.state;
-  const userdata = userstate.userData;
+  const userdata = localStorage.setItem('userDataa');
 
   const handleclick = (i) => {
     navigate(`/${i}`, { state: { userData: userdata } });
