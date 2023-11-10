@@ -159,11 +159,12 @@ console.log('users :>>', users);
 console.log("messages seeing ",messages);
     return (
         <div className='w-screen flex'>
-            <div className='w-[25%] h-screen border border-black'>
+            <div className='w-[25%] h-screen bg-slate-900 border border-black overflow-hidden'>
+            <div style={{ overflowY: 'scroll', maxHeight: '100%', paddingRight: '17px' ,marginRight: '-17px' }}>
                 <div className='flex justify-center items-center h-[15%]'>
                     <div className='flex items-center'>
                         <div>
-                            <svg class="h-12 w-12 text-black"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-12 w-12 text-green-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
 
@@ -203,14 +204,15 @@ console.log("messages seeing ",messages);
                     </div>
                 </div>
             </div>
-            <div className='w-[50%] h-screen bg-white flex flex-col items-center'>
+            </div>
+            <div className='w-[50%] h-screen bg-white flex flex-col items-center' style={{ backgroundImage: 'url("https://i.pinimg.com/originals/ee/a2/ab/eea2abd0eafdcaffbf4287bf9ff6b394.png")' }}>
                 {
                     messages?.receiver?.name && 
                 
                 <div className='w-[75%] bg-secondary h-[80px] my-14 rounded-full flex items-center px-14 py-2'>
                     <div className='ml-6 mr-auto'>
                         <h3 className='cursor-pointer text-lg'>{messages?.receiver?.name}</h3>
-                        <p className='text-sm font-light text-green-600'>{messages?.receiver?.email}</p>
+                        <p className='text-sm font-light text-white-600'>{messages?.receiver?.email}</p>
                     </div>
                     <div>
                         
@@ -229,7 +231,7 @@ console.log("messages seeing ",messages);
                                     <>
                                         <div
                                             className={`max-w-[40%] rounded-b-xl p-4 mb-6 ${
-                                                id === userData?.id ? 'bg-primary text-white rounded-tl-xl ml-auto' : 'bg-secondary rounded-tr-xl'
+                                                id === userData?.id ? 'bg-primary text-white rounded-tl-xl ml-auto' : 'bg-white text-black rounded-tr-xl'
                                             } `}
                                         >
                                             {message}
@@ -239,7 +241,7 @@ console.log("messages seeing ",messages);
                                 );
                             })
                         ) : (
-                            <div className='text-center text-lg text-black font-semibold mt-24'>
+                            <div className='text-center text-lg text-white font-semibold mt-24'>
                                 No Messages or No Conversation Selected
                                 <p>Please select any of the users on right or left to chat</p>
                             </div>
@@ -250,7 +252,7 @@ console.log("messages seeing ",messages);
                 {
                     messages?.receiver?.name &&
                     <div className='p-14 w-full flex items-center'>
-                        <Input placeholder='type a message...' value={message} onChange={(e) => setMessage(e.target.value)} className='w-[75%]' inputClassName='p-4 border-0 shadow-md rounded-full bg-secondary focus: ring-0 focus:border-0 outline-none'/>
+                        <Input placeholder='type a message...' value={message} onChange={(e) => setMessage(e.target.value)} className='w-[75%]' inputClassName='p-4 border-0 shadow-md rounded-full bg-white focus: ring-0 focus:border-0 outline-none'/>
                         <div className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && 'pointer-events-none'}`} onClick={() => sendMessage()}>
                             <svg
                             xmlns='http://www.w3.org/2000/svg'
@@ -269,7 +271,7 @@ console.log("messages seeing ",messages);
                             <path d='M21 3l-6.5 18a0.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a0.55 .55 0 0 1 0 -1l18 -6.5' />
                             </svg>
                         </div>
-                        <div className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && 'pointer-events-none'}`}>
+                        {/* <div className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && 'pointer-events-none'}`}>
                             <label htmlFor='fileInput' onClick={openFileInput}>
                                 <svg
                                 xmlns='http://www.w3.org/2000/svg'
@@ -297,13 +299,14 @@ console.log("messages seeing ",messages);
                                 ref={fileInputRef}
                                 onChange={handleFileUpload}
                                 />
-                        </div>
+                        </div> */}
                     </div>
                 }
                 
             </div>
     
-            <div className='w-[25%] h-screen bg-light px-8 py-16'>
+            <div className='w-[25%] h-screen bg-slate-900 px-8 py-16 overflow-hidden'>
+                <div style={{ overflowY: 'scroll', maxHeight: '100%', paddingRight: '17px' ,marginRight: '-17px' }}>
                 <div className='text-primary text-lg'>People</div>
                 <div>
                         {
@@ -311,10 +314,10 @@ console.log("messages seeing ",messages);
                             users.map(({userId, user}) => {
                                 
                                 return(
-                                    <div  className='flex items-center py-8 border-b border-b-gray-580'>
+                                    <div  className='flex items-center py-8 border-b border-b-black'>
                                         <div className='cursor-pointer flex items-center' key={userId} onClick={() => fetchMessages('new', user)}>
                                         <div className='ml-6'>
-                                            <h3 className='text-lg font-semibold text-black'>{user?.name}</h3>
+                                            <h3 className='text-lg font-semibold text-white'>{user?.name}</h3>
                                             <p className='text-sm font-light text-green-600'>{user?.email}</p>
                                         </div>
                                         </div>
@@ -323,6 +326,7 @@ console.log("messages seeing ",messages);
                             }) : <div className='text-center text-lg font-semibold mt-24'>noconversations</div>
                         }
                     </div>
+                </div>
             </div>
         </div>
     )
