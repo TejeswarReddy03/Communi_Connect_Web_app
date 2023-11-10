@@ -116,8 +116,8 @@ try {
 });
 app.get('/announcements/after/:date', async (req, res) => {
   const { date } = req.params;
-  console.log(date);
-  console.log("made api req to after date");
+  // console.log(date);
+  // console.log("made api req to after date");
   try {
     const announcements = await Announcements.find({ createdAt: { $gte: new Date(date) } });
     res.json(announcements);
@@ -128,7 +128,7 @@ app.get('/announcements/after/:date', async (req, res) => {
 // Socket.io
 let users = [];
 io.on('connection', socket => {
-  console.log('User connected', socket.id);
+  // console.log('User connected', socket.id);
   socket.on('addUser', userId => {
     const isUserExist = users.find(user => user.userId === userId);
     if (!isUserExist) {
@@ -142,7 +142,7 @@ io.on('connection', socket => {
     const receiver = users.find(user => user.userId === receiverId);
     const sender = users.find(user => user.userId === senderId);
     const user = await User.findById(senderId);
-    console.log('sender :>> ', sender, receiver);
+    // console.log('sender :>> ', sender, receiver);
     if (receiver) {
       io.to(receiver.socketId).to(sender.socketId).emit('getMessage', {
         senderId,
@@ -171,7 +171,7 @@ io.on('connection', socket => {
 app.get("/auth-success", (req, res) => {
   const jsonDataEncoded = req.query.data;
   const jsonData = JSON.parse(decodeURIComponent(jsonDataEncoded));
-  console.log("Received JSON data:", jsonData);
+  // console.log("Received JSON data:", jsonData);
   //if(datafrombackend.authstatus==1) {datafrombackend={...jsonData};}
 
   res.json(jsonData);
@@ -233,7 +233,7 @@ app.get('/api/top-liked-posts', async (req, res) => {
 app.get('/api/announcements/lang', async (req, res) => {
   try {
     const originalString = req.query.announcement;
-    console.log(originalString);
+    // console.log(originalString);
     const to = req.query.language;
 
     const translationResult = await translate(originalString, null, to);
@@ -366,14 +366,14 @@ app.get('/api/comments', async (req, res) => {
 */
 app.get('/api/posts', async (req, res) => {
   try {
-    console.log("posts called");
+    // console.log("posts called");
     pincode=req.body.userPincode;
     
     const posts = await Post.find({});
 
     const populatedPosts = await Post.populate(posts, { path: 'comments' });
 
-    console.log("Logging populated posts:", populatedPosts);
+    // console.log("Logging populated posts:", populatedPosts);
 
     res.json(populatedPosts);
   } catch (error) {
@@ -408,9 +408,9 @@ app.post('/api/posts', async (req, res) => {
 
 
   });
-  console.log("heyy",req.body.userid);
+  // console.log("heyy",req.body.userid);
   await NewPost.save().then((savedDocument) => {
-    console.log('Document saved successfully:', savedDocument);
+    // console.log('Document saved successfully:', savedDocument);
 
     return res.status(201).json({ message: "User created successfully" });
 
@@ -434,19 +434,19 @@ app.post('/api/postslike', async (req, res) => {
 
     if (post.likedBy.includes(userId)) {
       // User already liked the post, remove the like
-      console.log("if working");
-      console.log('Before filtering:', post.likedBy);
+      // console.log("if working");
+      // console.log('Before filtering:', post.likedBy);
       const index = post.likedBy.indexOf(userId);
       if (index !== -1) {
         post.likedBy.splice(index, 1); // Remove the element at the found index
         post.likes = post.likes - 1;
       }
-      console.log('After filtering:', post.likedBy);
+      // console.log('After filtering:', post.likedBy);
       //console.log(post);
       
     } else {
       // User hasn't liked the post, add the like
-      console.log("else working");
+      // console.log("else working");
       post.likedBy.push(userId);
       post.likes = post.likes + 1;
     }
@@ -475,11 +475,11 @@ app.post('/api/delete_post', async (req, res) => {
     const postId = req.body.postid;
 
     // Use Mongoose to find and delete the post by its ID
-    console.log(postId);
+    // console.log(postId);
     const deletedPost = await Post.findOneAndDelete({ _id: postId });
 
     if (deletedPost) {
-      console.log('Post deleted successfully:', deletedPost);
+      // console.log('Post deleted successfully:', deletedPost);
    return res.status(201).json({ message: 'Post deleted successfully' });
     } else {
       console.error('Post not found or could not be deleted.');
@@ -494,7 +494,7 @@ app.post('/api/delete_post', async (req, res) => {
 app.post('/api/updateUserProfile', async (req, res) => {
   const updatedUserData = req.body;
   const userEmail = updatedUserData.email;
-  console.log(updatedUserData.username);
+  // console.log(updatedUserData.username);
   try {
     // Find the user in the database by email
     const user = await User.findOne({ email: userEmail });
@@ -524,11 +524,11 @@ app.post('/api/delete_comment', async (req, res) => {
     const commentId = req.body.commentid;
 
     // Use Mongoose to find and delete the post by its ID
-   console.log(commentId);
+  //  console.log(commentId);
     const deletedComment = await Comment.findOneAndDelete({ _id: commentId });
 
     if (deletedComment) {
-      console.log('Post deleted successfully:', deletedComment);
+      // console.log('Post deleted successfully:', deletedComment);
       return res.status(201).json({ message: 'Post deleted successfully' });
     } else {
       console.error('Post not found or could not be deleted.');
@@ -561,7 +561,7 @@ app.post('/api/comments', async (req, res) => {
               
           })
           .then ((comment)=>{
-            console.log("comment");
+            // console.log("comment");
             postt.comments = postt.comments || [];
               postt.comments.push(comment);
               postt.save()
@@ -621,7 +621,7 @@ app.get('/data',(req, res) => {
 });
 
 const createAdmin=async (req,res)=>{
-  console.log("creating admin");
+  // console.log("creating admin");
   try{
     
     const existingadminpincode=await User.findOne({pincode:req.body.pincode,isAdmin:true});
@@ -661,11 +661,11 @@ const createAdmin=async (req,res)=>{
       isAdmin:true,
       adminId:shorterId
     });
-    console.log("User created");
+    // console.log("User created");
 
     await newUser.save(); // Save the new user to the database
 
-    console.log("User created");
+    // console.log("User created");
     return res.status(201).json({ message: "User created successfully" });
   }
   catch (error) {
@@ -676,7 +676,7 @@ const createAdmin=async (req,res)=>{
 }
 
 const create = async (req, res) => {
-  console.log("HH");
+  // console.log("HH");
   try {
     if (req.body.password !== req.body.confirm_password) {
   
@@ -695,11 +695,11 @@ const create = async (req, res) => {
       pincode: req.body.pincode,
       password: req.body.password,
     });
-    console.log("User created");
+    // console.log("User created");
 
     await newUser.save(); // Save the new user to the database
 
-    console.log("User created");
+    // console.log("User created");
     return res.status(201).json({ message: "User created successfully" });
   } catch (error) {
     console.error("Error in user creation:", error);
@@ -737,12 +737,12 @@ createSession = async function (req, res) {
   };
   */
   app.get('/check-ifadmin',async(req,res)=>{
-    console.log("check-ifID req received")
+    // console.log("check-ifID req received")
    
     const adminemail=req.query.adminemail;
     try{
       
-      console.log("before finding admin with email ",adminemail);
+      // console.log("before finding admin with email ",adminemail);
       const user = await User.findOne({ email: adminemail });
       if(user.isAdmin==true){
         return res.status(400).json({message:'user is actually admin',field:'noAdminEmail'});
@@ -754,12 +754,12 @@ createSession = async function (req, res) {
     }
   })
 app.get('/check-adminID',async(req,res)=>{
-  console.log("check-adminID req received")
+  // console.log("check-adminID req received")
   const adminIDToCheck = req.query.adminID;
   const adminemail=req.query.adminemail;
   try{
     
-    console.log("before finding admin with email ",adminemail);
+    // console.log("before finding admin with email ",adminemail);
     const user = await User.findOne({ email: adminemail });
     if(user.isAdmin==false){
       return res.status(400).json({message:'No admin with such email',field:'noAdminEmail'});
@@ -787,7 +787,7 @@ app.get('/destroy-session', usersController.destroySession);
 
 app.post('/create_admin', async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     await createAdmin(req, res);
   }
   catch (error) {
@@ -797,7 +797,7 @@ app.post('/create_admin', async (req, res) => {
 })
 app.post('/create', async (req, res) => {
   try {
-    console.log(req.body); // Log the request body
+    // console.log(req.body); // Log the request body
     await create(req, res); // Call the create function to create the user
     //  res.status(200).json({ message: 'Data received and user created successfully' }); // Respond to the client
   } catch (error) {
@@ -898,7 +898,7 @@ app.get('/api/conversations/:userId', async (req, res) => {
 app.get('/api/message/:conversationId', async (req, res) => {
   try {
     const checkMessages = async (conversationId) => {
-      console.log(conversationId, 'conversationId')
+      // console.log(conversationId, 'conversationId')
       const messages = await Messages.find({ conversationId });
       const messageUserData = Promise.all(messages.map(async (message) => {
         const user = await User.findById(message.senderId);
