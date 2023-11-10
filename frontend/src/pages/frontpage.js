@@ -61,7 +61,7 @@ function Frontpage() {
       const response = await axios.post("http://localhost:8004/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
       setErrorloginuser('');
-      localStorage.setItem("userDataa", "true");
+      localStorage.setItem("userDataa", JSON.stringify(response.data));
      navigate('/home', { state: { userData: response.data} });
 
 
@@ -133,7 +133,7 @@ function Frontpage() {
             <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
           </button>
               {errorloginuser&&<p>{errorloginuser}</p>}
-              <Components.Anchor href="#">Forgot your password?</Components.Anchor>
+            
               <Components.Button type="submit">Sign In</Components.Button>
             </Components.Form>
           </Components.SignInContainer>

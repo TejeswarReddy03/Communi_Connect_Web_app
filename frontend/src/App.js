@@ -44,14 +44,14 @@ function App() {
     
 
       <Routes>
-        
+ 
       {(!userData2) && <Route path="/*" element={<Frontpage/>}/>}
         {/* <Route  index element={<Home/>}/> */}
         
-        {userData2&&<Route index element ={<Startpage />} />}
+        {<Route index element ={<Startpage />} />}
         {!userData2&&<Route path='/frontpage_user'  element={< Frontpage/>} />}
         {!userData2&&<Route path='/frontpage_admin'  element={< FrontpageAdmin/>} />}
-        {!userData2&&<Route path="/signup" element={<Signup />} />}
+        {userData2&&<Route path="/signup" element={<Signup />} />}
         {/* <Route path="/login" element={<Login />} /> */}
         {userData2&&<Route path= "/home" element={<Homepage />} />}
         {userData2&&<Route path="/chats" element={<Chats />} />}

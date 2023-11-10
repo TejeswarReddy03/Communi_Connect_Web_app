@@ -15,7 +15,7 @@ function Chats(){
     const [socket, setSocket] = useState(null);
     const [selectedConversation, setselectedConversation] = useState(null);
     const messageRef = useRef(null);
-    console.log('user :>>', userData);
+    console.log('userdata displayin :>>', userData);
     useEffect(() =>{
         setSocket(io('http://localhost:8080'));
     }, []);
@@ -26,9 +26,10 @@ function Chats(){
             console.log('activeUsers :>>', users);
         });
         socket?.on('getMessage', (data) => {
+            console.log("inside socket .on :",userData);
             setMessages((prev) => ({
                 ...prev,
-                messages: [...prev.messages, {userData: data.userData, message: data.message}],
+                messages: [...prev.messages, {user: userData, message: data.message}],
             }));
         });
     }, [socket]);
@@ -155,7 +156,7 @@ const openFileInput = () => {
 
 
 console.log('users :>>', users);
-
+console.log("messages seeing ",messages);
     return (
         <div className='w-screen flex'>
             <div className='w-[25%] h-screen border border-black'>
@@ -216,11 +217,14 @@ console.log('users :>>', users);
                     </div>
                 </div>   
                 }
-                <div className='h-[75%]  w-full overflow-scroll  shadow-sm'>
+                <div className='h-[75%]  w-full overflow-hidden  shadow-sm'>
+                <div style={{ overflowY: 'scroll', maxHeight: '100%', paddingRight: '17px' ,marginRight: '-17px' }}>
                     <div className='h-[1000px] px-10 p-14'>
-                        
                         {messages?.messages?.length > 0 ? (
+                           
                             messages.messages.map(({ message, user: { id } = {} }) => {
+                                console.log("id : ",id);
+                                console.log("used.id ",userData.id);
                                 return (
                                     <>
                                         <div
@@ -235,11 +239,12 @@ console.log('users :>>', users);
                                 );
                             })
                         ) : (
-                            <div className='text-center text-lg font-semibold mt-24'>
+                            <div className='text-center text-lg text-black font-semibold mt-24'>
                                 No Messages or No Conversation Selected
                                 <p>Please select any of the users on right or left to chat</p>
                             </div>
                         )}
+                    </div>
                     </div>
                 </div>
                 {
@@ -309,7 +314,7 @@ console.log('users :>>', users);
                                     <div  className='flex items-center py-8 border-b border-b-gray-580'>
                                         <div className='cursor-pointer flex items-center' key={userId} onClick={() => fetchMessages('new', user)}>
                                         <div className='ml-6'>
-                                            <h3 className='text-lg font-semibold'>{user?.name}</h3>
+                                            <h3 className='text-lg font-semibold text-black'>{user?.name}</h3>
                                             <p className='text-sm font-light text-green-600'>{user?.email}</p>
                                         </div>
                                         </div>
