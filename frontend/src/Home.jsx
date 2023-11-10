@@ -13,9 +13,9 @@ const Home =()=> {
         </div>
         <About/>
         <Experience/>
-        <Tech/>
+        {/* <Tech/> */}
         
-        <Feedbacks/> 
+        {/* <Feedbacks/>  */}
         <div className="relative z-0">
           <Contact/>
           <StarsCanvas/> 

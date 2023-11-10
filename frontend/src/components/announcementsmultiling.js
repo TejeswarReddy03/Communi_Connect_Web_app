@@ -11,9 +11,8 @@ function Announcementsmultiling() {
   const [showfilterform,setshowfilterform]=useState(false);
   const [selectedfilterdate,setselectedfilterdate]=useState('');
   const [otherlang,setotherlang]=useState('');
-  const location = useLocation();
-  const userstate = location.state;
-  const userdata=userstate.userData;
+  const userdata = JSON.parse(localStorage.getItem('userDataa'));
+
   console.log(userdata);
    const userIsAdmin=userdata.isAdmin;
   useEffect(() => {

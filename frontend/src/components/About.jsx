@@ -39,7 +39,7 @@ const About = () => {
       <h2 className={styles.sectionHeadText}>Overview.</h2>
     </motion.div>
     <motion.p variants={fadeIn("","",0.1,1)} className=" bg-tertiary mt-4 text-secondary text-[17px] max-w-2xl leading-[30px]">
-    The website is a comprehensive platform specifically designed for Indian communities,
+    This website is a comprehensive platform specifically designed for Indian communities,
      with a primary focus on efficient and relevant information dissemination. 
      It utilizes a pincode-based segregation system to ensure that users can access content and connect with others in their specific locality,
     thereby promoting local community engagement and empowerment.

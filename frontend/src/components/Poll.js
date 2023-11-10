@@ -7,10 +7,8 @@ function Poll() {
   const [googleurluser,setGoogleurluser]=useState('');
   const [noformmsg,setNoformmsg]=useState('');
 
-  
-  const location = useLocation();
-  const userstate = location.state;
-  const userdata = userstate.userData;
+  const userdata = JSON.parse(localStorage.getItem('userDataa'));
+
   const userIsAdmin = userdata.isAdmin;
   const handleURLChange = (e) => {
     setGoogleFormURL(e.target.value);

@@ -15,12 +15,8 @@ function Editprofile() {
 
   const navigate=useNavigate();
 
+  const userDataa = JSON.parse(localStorage.getItem('userDataa'));
 
-
-
-  const location = useLocation();
-  const userState = location.state;
-  const userDataa = userState ? userState.userData : null;
   const [userData, setUserData] = useState({
     username: userDataa.name,
     password: userDataa.password,

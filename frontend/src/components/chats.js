@@ -5,9 +5,8 @@ import { useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import {io} from 'socket.io-client';
 function Chats(){
-    const location = useLocation();
-    const userState = location.state;
-    const userData = userState ? userState.userData : null;
+    const userData = JSON.parse(localStorage.getItem('userDataa'));
+
     const [conversations, setConversations] = useState([])
     const [messages, setMessages] = useState({});
     const [message, setMessage] = useState('');
@@ -38,8 +37,8 @@ function Chats(){
         messageRef?.current?.scrollIntoView({behaviour: 'smooth'});
     }, [messages?.messages]);
     useEffect(() => {
-        const userState = location.state;
-        const userData = userState ? userState.userData : null;
+        const userData = JSON.parse(localStorage.getItem('userDataa'));
+
         const fetchConversations = async() => {
             const res = await fetch(`http://localhost:8004/api/conversations/${userData?.id}`, {
                 method: 'GET',
