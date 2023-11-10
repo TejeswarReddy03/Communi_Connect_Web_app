@@ -31,7 +31,7 @@ function Login() {
       console.log("above if")
       // Store the user data in local storage.
       if(response.data){
-      localStorage.setItem("beel", "true");
+      // localStorage.setItem("beel", "true");
         console.log("inside if")
       }
 // Retrieve the user data from local storage.
