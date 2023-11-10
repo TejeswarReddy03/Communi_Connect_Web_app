@@ -20,7 +20,7 @@ function Announcementsmultiling() {
       setIsLoading(true);
   var x=1;var y=2;var z=3;
       try {
-        const response = await axios.get('http://localhost:8004/api/announcements', {});
+        const response = await axios.get('https://communiconnect-backend.onrender.com/api/announcements', {});
         var respdata=response.data;
         respdata=respdata.filter((user)=>user.pincode===userdata.pincode)
        if(currentcategory!='sortbydate'){ respdata.sort((a, b) => {
@@ -52,7 +52,7 @@ for (const announcement of respdata) {
     try {
       // Send only the 'announcement' attribute for translation
       console.log(announcement.announcement)
-      const response = await axios.get('http://localhost:8004/api/announcements/lang', {
+      const response = await axios.get('https://communiconnect-backend.onrender.com/api/announcements/lang', {
         params: {
          announcement:announcement.announcement,
          language:'te'
@@ -94,7 +94,7 @@ for (const announcement of respdata) {
             try {
               // Send only the 'announcement' attribute for translation
               console.log(announcement.announcement)
-              const response = await axios.get('http://localhost:8004/api/announcements/lang', {
+              const response = await axios.get('https://communiconnect-backend.onrender.com/api/announcements/lang', {
                 params: {
                  announcement:announcement.announcement,
                  language:'hi'
@@ -136,7 +136,7 @@ for (const announcement of respdata) {
                     try {
                       // Send only the 'announcement' attribute for translation
                       console.log(announcement.announcement)
-                      const response = await axios.get('http://localhost:8004/api/announcements/lang', {
+                      const response = await axios.get('https://communiconnect-backend.onrender.com/api/announcements/lang', {
                         params: {
                          announcement:announcement.announcement,
                          language:otherlang
@@ -254,7 +254,7 @@ function NewAnnouncementmultilingForm({ setAnnouncementsmultiling,setIsLoading,s
 
      async function posttoapi() {
      // console.log("sending post req to announcements");
-     await axios.post("http://localhost:8004/api/announcements", { announcement: text, pincode: userdata.pincode });
+     await axios.post("https://communiconnect-backend.onrender.com/api/announcements", { announcement: text, pincode: userdata.pincode });
 
       }
       posttoapi();

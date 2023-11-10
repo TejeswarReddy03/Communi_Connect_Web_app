@@ -45,7 +45,7 @@ function FrontpageAdmin() {
     }
     try {
       // Make an HTTP POST request to your backend server
-      const response = await axios.post("http://localhost:8004/create_admin", formDatasignup); // Replace "/api/register" with your backend endpoint
+      const response = await axios.post("https://communiconnect-backend.onrender.com/create_admin", formDatasignup); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful", response.data);
       setErroremail('');
       setErrorwithadminpincode('');
@@ -85,8 +85,8 @@ function FrontpageAdmin() {
       //check if adminID matches
       const adminIDToCheck = formDatalogin.adminID;
       const adminemail = formDatalogin.email;
-      const adminCheckResponse = await axios.get(`http://localhost:8004/check-adminID?adminID=${adminIDToCheck}&adminemail=${adminemail}`);
-      const response = await axios.post("http://localhost:8004/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
+      const adminCheckResponse = await axios.get(`https://communiconnect-backend.onrender.com/check-adminID?adminID=${adminIDToCheck}&adminemail=${adminemail}`);
+      const response = await axios.post("https://communiconnect-backend.onrender.com/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
       localStorage.setItem("userDataa", JSON.stringify(response.data));
 

@@ -26,7 +26,7 @@ function Login() {
 
     try {
       // Make an HTTP POST request to your backend server
-      const response = await axios.post("http://localhost:8004/create-session", formData); // Replace "/api/register" with your backend endpoint
+      const response = await axios.post("https://communiconnect-backend.onrender.com/create-session", formData); // Replace "/api/register" with your backend endpoint
       console.log("Registration2 successful and this is the data of user", response.data);
       console.log("above if")
       // Store the user data in local storage.

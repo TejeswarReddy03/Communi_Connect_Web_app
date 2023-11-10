@@ -25,7 +25,7 @@ function PollForm() {
       options,
     };
 
-    axios.post('http://localhost:8004/api/polls', newPoll).then((response) => {
+    axios.post('https://communiconnect-backend.onrender.com/api/polls', newPoll).then((response) => {
       setPolls([...polls, response.data]);
     });
   };

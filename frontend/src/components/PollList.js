@@ -7,7 +7,7 @@ function PollList() {
 
   useEffect(() => {
     // Fetch polls when the component mounts
-    axios.get('http://localhost:8004/api/polls').then((response) => {
+    axios.get('https://communiconnect-backend.onrender.com/api/polls').then((response) => {
       setPolls(response.data);
     });
   }, []);

@@ -40,7 +40,7 @@ function Chats(){
         const userData = JSON.parse(localStorage.getItem('userDataa'));
 
         const fetchConversations = async() => {
-            const res = await fetch(`http://localhost:8004/api/conversations/${userData?.id}`, {
+            const res = await fetch(`https://communiconnect-backend.onrender.com/api/conversations/${userData?.id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ function Chats(){
     console.log('conversations :>>', conversations);
     const fetchMessages = async(conversationId, receiver) => {
         //const selected = selectedConversation || {conversationId, user: receiver};
-        const res = await fetch(`http://localhost:8004/api/message/${conversationId}?senderId=${userData?.id}&&receiverId=${receiver.receiverId}`,{
+        const res = await fetch(`https://communiconnect-backend.onrender.com/api/message/${conversationId}?senderId=${userData?.id}&&receiverId=${receiver.receiverId}`,{
             method: 'GET',
             headers: {
                 'Content-type':'application/json',
@@ -75,7 +75,7 @@ const sendMessage = async(e) => {
         message,
         conversationId: messages?.conversationId,
     });
-    const res = await fetch(`http://localhost:8004/api/message`, {
+    const res = await fetch(`https://communiconnect-backend.onrender.com/api/message`, {
         method: "POST",
         headers: {
             'content-type':"application/json",
@@ -93,7 +93,7 @@ useEffect(() => {
     const fetchUsers = async () => { 
         try {
             const pincodeToFilterBy = userData.pincode;
-            const res = await fetch(`http://localhost:8004/api/users/${pincodeToFilterBy}`, {
+            const res = await fetch(`https://communiconnect-backend.onrender.com/api/users/${pincodeToFilterBy}`, {
                 method: 'GET',
                 headers: {
                     'Content-type': 'application/json',
@@ -129,7 +129,7 @@ const handleFileUpload = async (e) => {
   }
 
   try {
-    const response = await fetch('http://localhost:8004/upload', {
+    const response = await fetch('https://communiconnect-backend.onrender.com/upload', {
       method: 'POST',
       body: formData,
     });

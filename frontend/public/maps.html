@@ -260,7 +260,7 @@
 
                               //  console.log("heyy image url is ", cloudinaryData.url.toString());
                                markerData.avatar=cloudinaryData.url.toString();     
-                                const axiosResponse = await axios.post("http://localhost:8004/api/addMarker", markerData);
+                                const axiosResponse = await axios.post("https://communiconnect-backend.onrender.com/api/addMarker", markerData);
 
                                
                             } catch (error) {
@@ -450,7 +450,7 @@
 
                                 console.log("heyy image url is ", cloudinaryData.url.toString());
                                markerData.avatar=cloudinaryData.url.toString();     
-                                const axiosResponse = await axios.post("http://localhost:8004/api/addMarker", markerData);
+                                const axiosResponse = await axios.post("https://communiconnect-backend.onrender.com/api/addMarker", markerData);
 
                                
                             } catch (error) {

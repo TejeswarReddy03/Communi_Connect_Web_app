@@ -16,7 +16,7 @@ function Posts() {
       try {
         console.log("isform",isformUploading);
         setShouldFetch(true);
-        const response = await axios.get('http://localhost:8004/api/posts');        
+        const response = await axios.get('https://communiconnect-backend.onrender.com/api/posts');        
         setPosts(response.data);
       } 
       catch (error) {
@@ -88,7 +88,7 @@ console.log("in handle submit")
            
 
             console.log("heyy image url is ",data.url.toString());
-         axios.post("http://localhost:8004/api/posts",{ username:user_name,content:contents,avatar:data.url.toString(),userid:userData.id
+         axios.post("https://communiconnect-backend.onrender.com/api/posts",{ username:user_name,content:contents,avatar:data.url.toString(),userid:userData.id
            
           })
           .then(response=>{
@@ -209,7 +209,7 @@ function ShowAnnouncements({annData,setShouldFetch,setisformUploading}) {
     async function posttoapii() {
      // setisformUploading(true);
       try{
-       axios.post("http://localhost:8004/api/comments", { content: contents, userr: userData.id,postid:postId })
+       axios.post("https://communiconnect-backend.onrender.com/api/comments", { content: contents, userr: userData.id,postid:postId })
       .then((response)=>{
         setisformUploading(false);
       });
@@ -241,7 +241,7 @@ function ShowAnnouncements({annData,setShouldFetch,setisformUploading}) {
         postId: post._id, userId: userData.id
       });
       
-      axios.post("http://localhost:8004/api/postslike", data,{headers:{"Content-Type" : "application/json"}})
+      axios.post("https://communiconnect-backend.onrender.com/api/postslike", data,{headers:{"Content-Type" : "application/json"}})
         .then(response => {
           console.log("in likes")
           setisformUploading(false);
@@ -255,7 +255,7 @@ function ShowAnnouncements({annData,setShouldFetch,setisformUploading}) {
        
       });
      // console.log(userData.id);
-      axios.post("http://localhost:8004/api/postslike", data,{headers:{"Content-Type" : "application/json"}})
+      axios.post("https://communiconnect-backend.onrender.com/api/postslike", data,{headers:{"Content-Type" : "application/json"}})
         .then(response => {
           console.log("in likes")
 
@@ -280,7 +280,7 @@ function ShowAnnouncements({annData,setShouldFetch,setisformUploading}) {
   setisformUploading(true);
   async function posttoapii() {
       try{
-       axios.post("http://localhost:8004/api/delete_post", {postid:postId }).
+       axios.post("https://communiconnect-backend.onrender.com/api/delete_post", {postid:postId }).
        then((res)=>{setisformUploading(false);})
       
       ;
@@ -300,7 +300,7 @@ function ShowAnnouncements({annData,setShouldFetch,setisformUploading}) {
     setisformUploading(true);
   async function posttoapii() {
       try{
-       axios.post("http://localhost:8004/api/delete_comment", {commentid:commentId }).then((res)=>{setisformUploading(false);});
+       axios.post("https://communiconnect-backend.onrender.com/api/delete_comment", {commentid:commentId }).then((res)=>{setisformUploading(false);});
     }
     catch(error){
       console.log("error",error);

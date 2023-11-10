@@ -17,7 +17,7 @@ function Poll() {
   const handleSubmit = () => {
     // Make an Axios POST request to save the Google Form URL to the database
     axios
-      .post('http://localhost:8004/api/save-google-form', {
+      .post('https://communiconnect-backend.onrender.com/api/save-google-form', {
         formLink: googleFormURL,
         pincode:userdata.pincode
       })
@@ -32,7 +32,7 @@ function Poll() {
   };
   const fetchRecentOpenPoll = async () => {
     try {
-      const response = await axios.get(`http://localhost:8004/api/fetch-recent-open-poll/${userdata.pincode}`);
+      const response = await axios.get(`https://communiconnect-backend.onrender.com/api/fetch-recent-open-poll/${userdata.pincode}`);
       const recentPoll = response.data;
 console.log(recentPoll);
       if (recentPoll) {
