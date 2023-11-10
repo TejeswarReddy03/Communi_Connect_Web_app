@@ -30,39 +30,14 @@ import {
     {
       id: "polls",
       title: "polls",
-    } 
+    },
+    {
+      id:"weeklyanalysis",
+      title:"weeklyanalysis"
+    }
   ]
   export const navLinks = [
-    {
-      id: "chats",
-      title: "chats",
-    },
-   
-    {
-      id: "announcements",
-      title: "announcements",
-    },
-    {
-      id: "posts",
-      title: "posts",
-    },
     
-    {
-      id: "maps",
-      title: "maps",
-    },
-    {
-      id: "viewmarkers",
-      title: "viewmarkers",
-    },
-    {
-      id: "multilingannc",
-      title:"multilingannc"
-    },
-    {
-      id: "editprofile",
-      title:"editprofile"
-    },
 
   ];
   
