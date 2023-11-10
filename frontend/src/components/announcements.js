@@ -19,7 +19,7 @@ function Announcements() {
       setIsLoading(true);
   
       try {
-        const response = await axios.get('http://localhost:8004/api/announcements', {});
+        const response = await axios.get('https://communiconnect-backend.onrender.com/api/announcements', {});
         var respdata=response.data;
         respdata=respdata.filter((user)=>user.pincode===userdata.pincode)
        if(currentcategory!='sortbydate'){ respdata.sort((a, b) => {
@@ -143,7 +143,7 @@ function NewAnnouncementForm({ setAnnouncements,setIsLoading,setIsformUploading,
 
      async function posttoapi() {
      // console.log("sending post req to announcements");
-     await axios.post("http://localhost:8004/api/announcements", { announcement: text, pincode: userdata.pincode });
+     await axios.post("https://communiconnect-backend.onrender.com/api/announcements", { announcement: text, pincode: userdata.pincode });
 
       }
       posttoapi();

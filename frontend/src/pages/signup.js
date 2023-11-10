@@ -30,7 +30,7 @@ function Signup(){
     
         try {
           // Make an HTTP POST request to your backend server
-          const response = await axios.post("http://localhost:8004/create", formData); // Replace "/api/register" with your backend endpoint
+          const response = await axios.post("https://communiconnect-backend.onrender.com/create", formData); // Replace "/api/register" with your backend endpoint
           console.log("Registration successful", response.data);
           navigate('/login', { state: { userData: response.data } });
 

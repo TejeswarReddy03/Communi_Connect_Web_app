@@ -21,7 +21,7 @@ const Navbar = () => {
     event.preventDefault();
 
     try {
-      const res = await axios.get("http://localhost:8004/destroy-session");
+      const res = await axios.get("https://communiconnect-backend.onrender.com/destroy-session");
       localStorage.removeItem('userDataa');
       console.log(res.data);
      localStorage.removeItem('loggedIn')

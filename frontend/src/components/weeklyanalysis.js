@@ -29,7 +29,7 @@ const WeeklyAnalysisChart = () => {
   useEffect(() => {
     const fetchDatatopposts = async () => {
       try {
-        const response = await axios.get('http://localhost:8004/api/top-liked-posts');
+        const response = await axios.get('https://communiconnect-backend.onrender.com/api/top-liked-posts');
 
         if (response.status !== 200) {
           throw new Error('Request failed');
@@ -49,7 +49,7 @@ const WeeklyAnalysisChart = () => {
 
   useEffect(()=>{
     async function fetchpostsdata(){
-    const postResponse = await axios.get('http://localhost:8004/api/data/post-count-per-week');
+    const postResponse = await axios.get('https://communiconnect-backend.onrender.com/api/data/post-count-per-week');
     //setPostCount(postResponse.data);
     const postData = {
       name: "Post Count",
@@ -136,7 +136,7 @@ const WeeklyAnalysisChart = () => {
   const fetchData = async () => {
     try {
       if (submittedPincode) {
-        const userResponse = await axios.get(`http://localhost:8004/api/data/user-count-per-week/${submittedPincode}`);
+        const userResponse = await axios.get(`https://communiconnect-backend.onrender.com/api/data/user-count-per-week/${submittedPincode}`);
        // setUserCount(userResponse.data);
         const userData = {
           name: "User Count",
@@ -147,14 +147,14 @@ const WeeklyAnalysisChart = () => {
       
     
 
-        const markerResponse = await axios.get(`http://localhost:8004/api/data/marker-count-per-week/${submittedPincode}`);
+        const markerResponse = await axios.get(`https://communiconnect-backend.onrender.com/api/data/marker-count-per-week/${submittedPincode}`);
       //  setMarkerCount(markerResponse.data);
         const markerData = {
           name: "Marker Count",
           count: markerResponse.data,
           context:"noteworthyincidents in lastweek"
         };
-        const announcementResponse = await axios.get(`http://localhost:8004/api/data/announcement-count-per-week/${submittedPincode}`);
+        const announcementResponse = await axios.get(`https://communiconnect-backend.onrender.com/api/data/announcement-count-per-week/${submittedPincode}`);
         //  setAnnouncementCount(announcementResponse.data);
           const announcementData = {
             name: "Announcement Count",

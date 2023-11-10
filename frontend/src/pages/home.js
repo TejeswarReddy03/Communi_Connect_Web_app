@@ -25,7 +25,7 @@ function Home() {
       
       console.log("heyyyyy");
      
-    const res=  await axios.get("http://localhost:8004/destroy-session"); 
+    const res=  await axios.get("https://communiconnect-backend.onrender.com/destroy-session"); 
       console.log(res.data);
       console.log("removing item")
       localStorage.removeItem('userDataa')

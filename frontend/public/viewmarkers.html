@@ -121,7 +121,7 @@
              
                         async function markingonmap(){
                           
-                            const response = await axios.get('http://localhost:8004/api/getMarker', {
+                            const response = await axios.get('https://communiconnect-backend.onrender.com/api/getMarker', {
           params: {
            pincode:userPincode,
            },
@@ -276,7 +276,7 @@
     }).setLngLat(userCoordinates).addTo(map);
     async function markingonmap(){
                             //const response = await axios.get('http://localhost:8004/api/getMarker');
-                            const response = await axios.get('http://localhost:8004/api/getMarker', {
+                            const response = await axios.get('https://communiconnect-backend.onrender.com/api/getMarker', {
           params: {
            pincode:userPincode,
            },

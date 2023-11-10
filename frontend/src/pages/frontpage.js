@@ -39,7 +39,7 @@ function Frontpage() {
 
     try {
       // Make an HTTP POST request to your backend server
-      const response = await axios.post("http://localhost:8004/create", formDatasignup); // Replace "/api/register" with your backend endpoint
+      const response = await axios.post("https://communiconnect-backend.onrender.com/create", formDatasignup); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful", response.data);
       setErrorsignupuser('');
       setErrorsignupconfrm('');
@@ -57,8 +57,8 @@ function Frontpage() {
 
     try {
       // Make an HTTP POST request to your backend server
-      const adminCheckResponse = await axios.get(`http://localhost:8004/check-ifadmin?adminemail=${formDatalogin.email}`);
-      const response = await axios.post("http://localhost:8004/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
+      const adminCheckResponse = await axios.get(`https://communiconnect-backend.onrender.com/check-ifadmin?adminemail=${formDatalogin.email}`);
+      const response = await axios.post("https://communiconnect-backend.onrender.com/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
       setErrorloginuser('');
       localStorage.setItem("userDataa", JSON.stringify(response.data));

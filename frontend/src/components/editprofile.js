@@ -34,13 +34,13 @@ function Editprofile() {
     try {
       // Make a POST request to update the user data
       console.log(userData);
-      const response = await axios.post('http://localhost:8004/api/updateUserProfile', userData);
+      const response = await axios.post('https://communiconnect-backend.onrender.com/api/updateUserProfile', userData);
   
       // Handle the response from the server
       console.log('Response from the server:', response.data);
   
       // Make a logout request and wait for it to complete
-      await axios.get("http://localhost:8004/destroy-session");
+      await axios.get("https://communiconnect-backend.onrender.com/destroy-session");
       localStorage.removeItem('userDataa');
       // Now navigate to the desired page
       navigate('/');
