@@ -42,7 +42,7 @@ function App() {
   return (
     <div>
     
-
+   <BrowserRouter basename="/">
       <Routes>
  
       {(!userData2) && <Route path="/*" element={<Frontpage/>}/>}
@@ -69,7 +69,7 @@ function App() {
         {userData2&&<Route path="/editprofile" element={<Editprofile/>}/>}
 
       </Routes>
-   
+    </BrowserRouter>
     </div>
     
     
