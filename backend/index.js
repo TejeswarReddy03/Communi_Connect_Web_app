@@ -20,7 +20,7 @@ cloudinary.config({
 const nodemailer = require('nodemailer');
 const io = require('socket.io')(8080, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'https://communiconnectwebapp.onrender.com',
   }
 });
 const app = express();
