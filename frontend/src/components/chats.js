@@ -16,7 +16,7 @@ function Chats(){
     const messageRef = useRef(null);
     console.log('userdata displayin :>>', userData);
     useEffect(() =>{
-        setSocket(io('http://localhost:8080'));
+        setSocket(io('https://communiconnect-backend.onrender.com'));
     }, []);
 
     useEffect(() =>{
