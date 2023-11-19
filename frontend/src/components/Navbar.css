@@ -1,0 +1,26 @@
+.dropdown-toggle::after {
+    color: white !important;
+}
+/* Add this CSS to your stylesheet */
+.custom-toggle-button {
+    color: white; /* Set the color of the lines to white */
+    background-color: black; /* Set the background color of the button to black */
+    border: 1px solid white; /* Set a white border */
+  }
+  
+  .custom-toggle-button span.navbar-toggler-icon {
+    background-color: white; /* Set the color of the horizontal lines to white */
+  }
+  .mynavbar-link:hover{
+    background-color: #495057; /* Change the background color on hover */
+    
+  }
+  .mynav-dropdown .dropdown-item {
+    background-color: #000; /* Default background color for dropdown items */
+    color: #fff; /* Default text color for dropdown items */
+  }
+  
+  .mynav-dropdown .dropdown-item:hover {
+    background-color: #495057; /* Change the background color on hover */
+    color: #c3ff00; /* Change the text color on hover */
+  }
