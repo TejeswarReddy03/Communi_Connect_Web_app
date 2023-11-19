@@ -12,6 +12,7 @@ import Maps from '../components/maps';
 import Posts from '../components/posts';
 import Announcements from '../components/announcements';
 import * as Components from '../styles/Components';
+import './frontpage.css';
 
 function Frontpage() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ function Frontpage() {
  const [errorsignupuser,setErrorsignupuser]=useState('');
  const [errorsignuppincode,setErrorsignuppincode]=useState('');
  const [errorsignupconfrm,setErrorsignupconfrm]=useState('');
+ const [isLoading,setIsloading]=useState(false);
  
   const [formDatalogin, setFormDatalogin] = useState({
     email: '',
@@ -33,6 +35,11 @@ function Frontpage() {
     password: '',
     confirm_password: '',
   });
+  const YourLoadingSpinner = () => (
+    // Replace this with your loading spinner component or any other loading animation
+    <div className="loading-spinner">Loading...</div>
+  );
+
 
   const handleSubmitSignUp = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -54,7 +61,7 @@ function Frontpage() {
 
   const handleSubmitLogin = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
-
+    setIsloading(true);
     try {
       // Make an HTTP POST request to your backend server
       const adminCheckResponse = await axios.get(`https://communiconnect-backend.onrender.com/check-ifadmin?adminemail=${formDatalogin.email}`);
@@ -62,7 +69,8 @@ function Frontpage() {
       console.log("Registration successful and this is the data of user", response.data);
       setErrorloginuser('');
       localStorage.setItem("userDataa", JSON.stringify(response.data));
-     navigate('/home', { state: { userData: response.data} });
+      setIsloading(true);
+      navigate('/home', { state: { userData: response.data} });
 
 
       // Optionally, you can redirect the user or perform other actions
@@ -113,7 +121,8 @@ function Frontpage() {
         {isSignIn ? (
           <Components.SignInContainer signlnln={isSignIn.toString()}>
             <Components.Form onSubmit={handleSubmitLogin}>
-              <Components.Title>Sign in</Components.Title>
+            <Components.Title>Sign in</Components.Title>
+              
               <Components.Input
                 type="email"
                 name="email"
@@ -134,7 +143,7 @@ function Frontpage() {
           </button>
               {errorloginuser&&<p>{errorloginuser}</p>}
             
-              <Components.Button type="submit">Sign In</Components.Button>
+            {isLoading?<div className="loading-spinner"></div>:<Components.Button type="submit">Sign in</Components.Button>}  
             </Components.Form>
           </Components.SignInContainer>
         ) : (
