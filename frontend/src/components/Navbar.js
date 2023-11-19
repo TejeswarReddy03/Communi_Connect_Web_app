@@ -2,16 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { styles } from '../styles';
 import { navLinks } from '../constants';
-import { useLocation } from 'react-router-dom';
-import { logo, menu, close } from '../assets';
-import { useNavigate } from 'react-router-dom';
-import {BroadcastChannel} from 'broadcast-channel'
-import { Button, Navbar as BootstrapNavbar, Nav } from 'react-bootstrap';
+import { useNavigate,useLocation } from 'react-router-dom';
+import { Button, Navbar as BootstrapNavbar, Nav, NavDropdown } from 'react-bootstrap';
 import axios from 'axios';
+import { logo } from '../assets'; // Assuming you have the logo import
+import './Navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const userdata = localStorage.getItem('userDataa');
+  
+ // const location = useLocation();
+ // const userstate = location.state;
+ // const userdata = userstate.userData;
+   const [active, setActive] = useState('');
 
   const handleclick = (i) => {
     navigate(`/${i}`, { state: { userData: userdata } });
@@ -24,300 +28,119 @@ const Navbar = () => {
       const res = await axios.get("https://communiconnect-backend.onrender.com/destroy-session");
       localStorage.removeItem('userDataa');
       console.log(res.data);
-     localStorage.removeItem('loggedIn')
+      localStorage.removeItem('loggedIn')
       navigate('/');
     } catch (error) {
       console.error('logout failed', error);
     }
   };
 
-  const [active, setActive] = useState('');
-  const [showAnnouncementsNavbar, setShowAnnouncementsNavbar] = useState(false);
-  const [showProfileNavbar, setShowProfileNavbar] = useState(false);
-  const [showMapsNavbar, setShowMapsNavbar] = useState(false);
-
   return (
     <>
-      <nav
+      <BootstrapNavbar
         className={`
-          ${styles.paddingX}
-          w-full flex items-center py-3 fixed top-0 z-20 bg-tertiary`}
+    ${styles.paddingX}
+    w-full flex items-center py-3 fixed top-0 z-20 bg-tertiary text-white`}
+        expand="lg"
       >
-        <div className="w-full flex justify-between items-center max-w-7xl mx-auto">
+        <Link
+          to="/home"
+          className="flex items-center gap-2"
+          onClick={() => {
+            setActive('');
+            window.scrollTo(0, 0);
+          }}
+        >
+          <img src={logo} alt="logo" className="w-9 h-9 object-contain" />
+          <p className="text-white text-[18px] font-bold cursor-pointer flex">
+            CommuniConnect
+          </p>
+        </Link>
 
-          <Link
-            to="/home"
-            className="flex items-center gap-2"
-            onClick={() => {
-              setActive('');
-              window.scrollTo(0, 0);
-            }}
-          >
-             <img src={logo} alt="logo" className="w-9 h-9 object-contain" />
-            <p className="text-white text-[18px] font-bold cursor-pointer flex">
-              CommuniConnect
-            </p>
-           
-          </Link>
+        <BootstrapNavbar.Toggle aria-controls="responsive-navbar-nav" className="custom-toggle-button" />
 
-          <ul className="list-none hidden sm:flex flex-row gap-10">
-            {navLinks.map((link) => (
-              <li
+
+        <BootstrapNavbar.Collapse id="responsive-navbar-nav">
+          <Nav className="ml-auto">
+            {/* {navLinks.map((link) => (
+              <Nav.Link
                 key={link.id}
-                className={`${
-                  active === link.title ? 'text-white' : 'text-secondary'
-                } hover:text-white text-[18px] font-medium cursor-pointer`}
                 onClick={() => {
                   setActive(link.title);
                   handleclick(link.title);
                 }}
+                className={`${active === link.title ? 'text-white' : 'text-secondary'
+                  } hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
               >
                 {link.title}
-              </li>
-            ))}
-          </ul>
-          <div className="d-flex gap-2 ml-auto">
-          <Button
-            variant="outline-light"
-            className="text-[18px] font-medium cursor-pointer"
-            onClick={() => setShowAnnouncementsNavbar(!showAnnouncementsNavbar)}
-          >
-            Announcements
-          </Button>
-          <Button
-            variant="outline-light"
-            className="text-[18px] font-medium cursor-pointer"
-            onClick={() => setShowMapsNavbar(!showMapsNavbar)}
-          >
-            Maps
-          </Button>
+              </Nav.Link>
+            ))} */}
 
-          <Button
-            variant="outline-light"
-            className="text-[18px] font-medium cursor-pointer"
-            onClick={() => handleclick('chats')}
-          >
-            Chats
-          </Button>
-
-          <Button
-            variant="outline-light"
-            className="text-[18px] font-medium cursor-pointer"
-            onClick={() => handleclick('posts')}
-          >
-            Posts
-          </Button>
-
-          <Button
-            variant="outline-light"
-            className="text-[18px] font-medium cursor-pointer"
-            onClick={() => handleclick('weeklyanalysis')}
-          >
-            WeeklyAnalysis
-          </Button>
-
-          <Button
-            variant="outline-light"
-            className="text-[18px] font-medium cursor-pointer"
-            onClick={() => setShowProfileNavbar(!showProfileNavbar)}
-          >
-            Profile
-          </Button>
-        </div>
-        </div>
-      </nav>
-
-      {showAnnouncementsNavbar && (
-        <BootstrapNavbar
-          className={`${styles.paddingX} w-full fixed top-0 z-20`}
-          bg="tertiary"
-          expand="lg"
-        >
-          <div className="container">
+            {/* NavDropdown for Announcements */}
             <Link
-              to="/"
-              className="navbar-brand text-white text-[18px] font-bold cursor-pointer flex"
+              to="/chats"
               onClick={() => {
-                setActive('');
-                window.scrollTo(0, 0);
-                setShowAnnouncementsNavbar(false);
+                setActive('Chats');
+                handleclick('chats');
               }}
+              className={`nav-link text-white mynavbar-link hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
             >
-              CommuniConnect
+              Chats
             </Link>
-
-            <BootstrapNavbar.Toggle aria-controls="responsive-navbar-nav" />
-
-            <BootstrapNavbar.Collapse id="responsive-navbar-nav">
-              <Nav className="ml-auto">
-                <Nav.Link
-                  onClick={() => {
-                    handleclick('announcements');
-                    setShowAnnouncementsNavbar(false);
-                  }}
-                  className={`${
-                    active === 'announcements' ? 'text-white' : 'text-secondary'
-                  } hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
-                >
-                  Announcements
-                </Nav.Link>
-
-                <Nav.Link
-                  onClick={() => {
-                    handleclick('multilingannc');
-                    setShowAnnouncementsNavbar(false);
-                  }}
-                  className={`${
-                    active === 'multilingannc' ? 'text-white' : 'text-secondary'
-                  } hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
-                >
-                  MultilingualAnnouncements
-                </Nav.Link>
-
-                <Nav.Link
-                  onClick={() => {
-                    handleclick('polls');
-                    setShowAnnouncementsNavbar(false);
-                  }}
-                  className={`${
-                    active === 'polls' ? 'text-white' : 'text-secondary'
-                  } hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
-                >
-                  Polls
-                </Nav.Link>
-
-                <Nav.Link
-                  onClick={() => {
-                    setShowAnnouncementsNavbar(false);
-                  }}
-                  className="text-white text-[18px] font-medium cursor-pointer"
-                >
-                  Close
-                </Nav.Link>
-              </Nav>
-            </BootstrapNavbar.Collapse>
-          </div>
-        </BootstrapNavbar>
-      )}
-
-      {showMapsNavbar && (
-        <BootstrapNavbar
-          className={`${styles.paddingX} w-full fixed top-0 z-20`}
-          bg="tertiary"
-          expand="lg"
-        >
-          <div className="container">
             <Link
-              to="/"
-              className="navbar-brand text-white text-[18px] font-bold cursor-pointer flex"
+              to="/posts"
               onClick={() => {
-                setActive('');
-                window.scrollTo(0, 0);
-                setShowMapsNavbar(false);
+                setActive('Posts');
+                handleclick('posts');
               }}
+              className={`nav-link text-white mynavbar-link hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
             >
-              CommuniConnect
+              Posts
             </Link>
-
-            <BootstrapNavbar.Toggle aria-controls="responsive-navbar-nav" />
-
-            <BootstrapNavbar.Collapse id="responsive-navbar-nav">
-              <Nav className="ml-auto">
-                <Nav.Link
-                  onClick={() => {
-                    handleclick('maps');
-                    setShowMapsNavbar(false);
-                  }}
-                  className={`${
-                    active === 'maps' ? 'text-white' : 'text-secondary'
-                  } hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
-                >
-                  AddMarkers
-                </Nav.Link>
-
-                <Nav.Link
-                  onClick={() => {
-                    handleclick('viewmarkers');
-                    setShowMapsNavbar(false);
-                  }}
-                  className={`${
-                    active === 'viewmarkers' ? 'text-white' : 'text-secondary'
-                  } hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
-                >
-                  ViewMarkers
-                </Nav.Link>
-
-                <Nav.Link
-                  onClick={() => {
-                    setShowMapsNavbar(false);
-                  }}
-                  className="text-white text-[18px] font-medium cursor-pointer"
-                >
-                  Close
-                </Nav.Link>
-              </Nav>
-            </BootstrapNavbar.Collapse>
-          </div>
-        </BootstrapNavbar>
-      )}
-
-      {showProfileNavbar && (
-        <BootstrapNavbar
-          className={`${styles.paddingX} w-full fixed top-0 z-20`}
-          bg="tertiary"
-          expand="lg"
-        >
-          <div className="container">
             <Link
-              to="/"
-              className="navbar-brand text-white text-[18px] font-bold cursor-pointer flex"
+              to="/weeklyanalysis"
               onClick={() => {
-                setActive('');
-                window.scrollTo(0, 0);
-                setShowProfileNavbar(false);
+                setActive('Weekly Analysis');
+                handleclick('weeklyanalysis');
               }}
+              className={`nav-link text-white mynavbar-link hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
             >
-              CommuniConnect
+              Weekly Analysis
             </Link>
+            <NavDropdown title={<span className="text-white mynavbar-link text-[18px]">Announcements</span>} id="announcements-dropdown" className="text-white mynav-dropdown">
+              <NavDropdown.Item onClick={() => handleclick('announcements')}>
+                Announcements
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={() => handleclick('multilingannc')}>
+                Multilingual Announcements
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={() => handleclick('polls')}>
+                Polls
+              </NavDropdown.Item>
+            </NavDropdown>
 
-            <BootstrapNavbar.Toggle aria-controls="responsive-navbar-nav" />
+            {/* NavDropdown for Maps */}
+            <NavDropdown title={<span className="text-white mynavbar-link text-[18px]">Maps</span>} id="maps-dropdown" className="text-white mynav-dropdown">
+              <NavDropdown.Item onClick={() => handleclick('maps')}>
+                Add Markers
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={() => handleclick('viewmarkers')}>
+                View Markers
+              </NavDropdown.Item>
+            </NavDropdown>
 
-            <BootstrapNavbar.Collapse id="responsive-navbar-nav">
-              <Nav className="ml-auto">
-                <Nav.Link
-                  onClick={() => {
-                    handleclick('editprofile');
-                    setShowProfileNavbar(false);
-                  }}
-                  className={`${
-                    active === 'editprofile' ? 'text-white' : 'text-secondary'
-                  } hover:text-white text-[18px] font-medium cursor-pointer mr-3`}
-                >
-                  Editprofile
-                </Nav.Link>
-
-                <Nav.Link
-              onClick={handlelogout}
-              className={`${
-                active === 'logout' ? 'text-white' : 'text-secondary'
-              } hover:text-white text-[18px] font-medium cursor-pointer`}
-            >
-              Logout
-            </Nav.Link>
-
-                <Nav.Link
-                  onClick={() => {
-                    setShowProfileNavbar(false);
-                  }}
-                  className="text-white text-[18px] font-medium cursor-pointer"
-                >
-                  Close
-                </Nav.Link>
-              </Nav>
-            </BootstrapNavbar.Collapse>
-          </div>
-        </BootstrapNavbar>
-      )}
+            {/* NavDropdown for Profile */}
+            <NavDropdown title={<span className="text-white mynavbar-link text-[18px]">Profile</span>} id="profile-dropdown" className="text-white mynav-dropdown">
+              <NavDropdown.Item onClick={() => handleclick('editprofile')}>
+                Edit Profile
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={handlelogout}>
+                Logout
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </BootstrapNavbar.Collapse>
+      </BootstrapNavbar>
     </>
   );
 };
