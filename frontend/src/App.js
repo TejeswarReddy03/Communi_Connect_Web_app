@@ -42,7 +42,7 @@ function App() {
   return (
     <div>
     
-   <BrowserRouter basename="/">
+   <BrowserRouter >
       <Routes>
  
       {(!userData2) && <Route path="/*" element={<Frontpage/>}/>}
