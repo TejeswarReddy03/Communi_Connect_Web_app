@@ -12,6 +12,7 @@ import Maps from '../components/maps';
 import Posts from '../components/posts';
 import Announcements from '../components/announcements';
 import * as Components from '../styles/Components';
+import './frontpage.css';
 
 function FrontpageAdmin() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ function FrontpageAdmin() {
   const [errorsigninpwd, setErrorsigninpwd] = useState('');
   const [errorwithadminpincode, setErrorwithadminpincode] = useState('');
   const [errorwithcnfpwd, setErrorwithcnfpwd] = useState('');
+  const [isLoading,setIsloading]=useState(false);
   const [formDatalogin, setFormDatalogin] = useState({
     email: '',
     password: '',
@@ -79,6 +81,7 @@ function FrontpageAdmin() {
 
   const handleSubmitLogin = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
+    setIsloading(true);
 
     try {
       // Make an HTTP POST request to your backend server
@@ -89,7 +92,7 @@ function FrontpageAdmin() {
       const response = await axios.post("https://communiconnect-backend.onrender.com/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
       localStorage.setItem("userDataa", JSON.stringify(response.data));
-
+      setIsloading(true);
       setErrorsigninadminid('');
       setErrorsigninemail('');
       setErrorsigninpwd('');
@@ -194,7 +197,8 @@ function FrontpageAdmin() {
           </button>
               {errorsigninpwd && <p>{errorsigninpwd}</p>}
             
-              <Components.Button type="submit">Sign In</Components.Button>
+             {isLoading?<div className="loading-spinner"></div>:<Components.Button type="submit">Sign in</Components.Button>}  
+                
             </Components.Form>
           </Components.SignInContainer>
         ) : (
