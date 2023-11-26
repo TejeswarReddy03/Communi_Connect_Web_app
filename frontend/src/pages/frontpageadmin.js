@@ -53,7 +53,7 @@ function FrontpageAdmin() {
       setErroremail('');
       setErrorwithadminpincode('');
       setErrorwithcnfpwd('');
-
+      setIsloading(false);
       toggleSignIn(true);
     } catch (error) {
       setIsloading(false);
@@ -94,6 +94,7 @@ function FrontpageAdmin() {
       const response = await axios.post("https://communiconnect-backend.onrender.com/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
       localStorage.setItem("userDataa", JSON.stringify(response.data));
+      setIsloading(false);
       setErrorsigninadminid('');
       setErrorsigninemail('');
       setErrorsigninpwd('');
@@ -246,7 +247,7 @@ function FrontpageAdmin() {
                 required // Make password field mandatory
               />
               {errorwithcnfpwd && <p>{errorwithcnfpwd}</p>}
-              {isLoading?<div className="loading-spinner"></div>:<Components.Button type="submit">Sign in</Components.Button>}  
+              {isLoading?<div className="loading-spinner"></div>:<Components.Button type="submit">Sign Up</Components.Button>}  
 
             </Components.Form>
           </Components.SignUpContainer>
