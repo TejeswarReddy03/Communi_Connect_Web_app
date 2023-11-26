@@ -41,6 +41,7 @@ function FrontpageAdmin() {
 
   const handleSubmitSignUp = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
+    setIsloading(true);
     if (errorwithpincode) {
       // If there's an error, prevent the form submission
       return;
@@ -55,6 +56,7 @@ function FrontpageAdmin() {
 
       toggleSignIn(true);
     } catch (error) {
+      setIsloading(false);
       console.error('Registration failed', error);
 
       if (error.response.data.field === 'email') {
@@ -92,7 +94,6 @@ function FrontpageAdmin() {
       const response = await axios.post("https://communiconnect-backend.onrender.com/create-session", formDatalogin); // Replace "/api/register" with your backend endpoint
       console.log("Registration successful and this is the data of user", response.data);
       localStorage.setItem("userDataa", JSON.stringify(response.data));
-      setIsloading(true);
       setErrorsigninadminid('');
       setErrorsigninemail('');
       setErrorsigninpwd('');
@@ -101,6 +102,7 @@ function FrontpageAdmin() {
 
       // Optionally, you can redirect the user or perform other actions
     } catch (error) {
+      setIsloading(false);
       console.error('Login failed', error);
       if (error.response.data.field === 'noAdminEmail') {
         setErrorsigninemail('No such email exists')
@@ -244,7 +246,8 @@ function FrontpageAdmin() {
                 required // Make password field mandatory
               />
               {errorwithcnfpwd && <p>{errorwithcnfpwd}</p>}
-              <Components.Button type="submit">Sign Up</Components.Button>
+              {isLoading?<div className="loading-spinner"></div>:<Components.Button type="submit">Sign in</Components.Button>}  
+
             </Components.Form>
           </Components.SignUpContainer>
         )}

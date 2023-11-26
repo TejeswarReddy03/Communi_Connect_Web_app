@@ -43,7 +43,7 @@ function Frontpage() {
 
   const handleSubmitSignUp = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
-
+    setIsloading(true);
     try {
       // Make an HTTP POST request to your backend server
       const response = await axios.post("https://communiconnect-backend.onrender.com/create", formDatasignup); // Replace "/api/register" with your backend endpoint
@@ -54,6 +54,7 @@ function Frontpage() {
       
       toggleSignIn(true);
     } catch (error) {
+      setIsloading(false);
       console.error('Registration failed', error);
       setErrorsignupuser('Entered fields are incorrect');
     }
@@ -69,12 +70,13 @@ function Frontpage() {
       console.log("Registration successful and this is the data of user", response.data);
       setErrorloginuser('');
       localStorage.setItem("userDataa", JSON.stringify(response.data));
-      setIsloading(true);
+      
       navigate('/home', { state: { userData: response.data} });
 
 
       // Optionally, you can redirect the user or perform other actions
     } catch (error) {
+      setIsloading(false);
       console.error('Login failed', error);
       setErrorloginuser('Invalid username or password');
      
@@ -188,8 +190,8 @@ function Frontpage() {
               />
               {errorsignupconfrm&&<p>{errorsignupconfrm}</p>}
              {errorsignupuser&&<p>{errorsignupuser}</p>}
-              <Components.Button type="submit">Sign Up</Components.Button>
-            </Components.Form>
+
+             {isLoading?<div className="loading-spinner"></div>:<Components.Button type="submit">Sign Up</Components.Button>}              </Components.Form>
           </Components.SignUpContainer>
         )}
 
